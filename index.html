@@ -883,16 +883,18 @@
 
   /* ============ SECTIONS ============ */
   .section {
-    padding: 140px 0;
+    padding: 96px 0;
     position: relative;
   }
   .section-head {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 64px;
-    padding-bottom: 28px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
     border-bottom: 1px solid var(--line);
+    gap: 24px;
+    flex-wrap: wrap;
   }
   .section-head .left { max-width: 600px; }
   .section-head .h-display { margin-top: 14px; }
@@ -1069,12 +1071,14 @@
   .category:hover .category-bg { transform: scale(1.12); }
   .category-num {
     position: absolute;
-    top: 24px; right: 28px;
+    top: 20px; right: 24px;
     font-family: var(--display);
-    font-size: 36px;
+    font-size: 32px;
     color: var(--ink-mute);
     letter-spacing: 0.04em;
     transition: color 0.4s;
+    z-index: 3;
+    text-shadow: 0 2px 8px rgba(10,10,10,0.6);
   }
   .category:hover .category-num { color: var(--gold); }
   .category-shape {
@@ -1131,7 +1135,7 @@
     background: var(--bg-2);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: 140px 0;
+    padding: 96px 0;
     position: relative;
     overflow: hidden;
   }
@@ -1195,7 +1199,7 @@
   .about-stats .stat .num { font-size: 48px; }
 
   /* Locations */
-  .locations { position: relative; padding: 140px 0; background: var(--bg); overflow: hidden; }
+  .locations { position: relative; padding: 96px 0; background: var(--bg); overflow: hidden; }
   .locations::before {
     content: "";
     position: absolute; inset: 0;
@@ -1218,6 +1222,55 @@
     overflow: hidden;
     background: var(--bg-2);
   }
+  /* Fallback layer behind iframe — shows if maps fails / before it loads */
+  .map-fallback {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+    padding: 32px;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(232,181,48,0.10), transparent 60%),
+      repeating-linear-gradient(45deg, rgba(232,181,48,0.04), rgba(232,181,48,0.04) 1px, transparent 1px, transparent 18px),
+      var(--bg-2);
+  }
+  .map-fallback-pin {
+    width: 56px; height: 56px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    position: relative;
+    background: rgba(10,10,10,0.6);
+    box-shadow: 0 0 40px rgba(232,181,48,0.25);
+    animation: pinPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pinPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,181,48,0.4); }
+    50% { box-shadow: 0 0 0 16px rgba(232,181,48,0); }
+  }
+  .map-fallback-pin svg { width: 24px; height: 24px; }
+  .map-fallback h4 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .map-fallback p {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+  .map-wrap iframe { position: relative; z-index: 1; }
   .map-wrap::before, .map-wrap::after {
     content: "";
     position: absolute;
@@ -1230,10 +1283,11 @@
   .map-wrap iframe {
     width: 100%; height: 100%;
     border: 0;
-    filter: grayscale(0.85) contrast(1.05) invert(0.92) hue-rotate(180deg);
+    background: transparent;
+    filter: grayscale(0.4) contrast(0.95) brightness(0.95);
     transition: filter 0.6s;
   }
-  .map-wrap:hover iframe { filter: grayscale(0.5) contrast(1.05) invert(0.92) hue-rotate(180deg); }
+  .map-wrap:hover iframe { filter: grayscale(0) contrast(1) brightness(1); }
   .map-label {
     position: absolute;
     top: 20px; left: 20px;
@@ -1325,7 +1379,7 @@
   .location-cta .btn { padding: 14px 22px; font-size: 11px; }
 
   /* Contact */
-  .contact-section { padding: 140px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+  .contact-section { padding: 96px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
   .contact-section::before {
     content: "";
     position: absolute;
@@ -1618,35 +1672,87 @@
   /* Responsive */
   @media (max-width: 980px) {
     .container { padding: 0 24px; }
-    nav.top { padding: 16px 24px; }
-    nav.top.scrolled { padding: 12px 24px; }
+    nav.top { padding: 14px 20px; }
+    nav.top.scrolled { padding: 10px 20px; }
     .nav-links { display: none; }
-    .hero-tag { left: 24px; }
+    .nav-icon { width: 38px; height: 38px; }
+    .logo { font-size: 22px; }
+    .logo-mark { width: 28px; height: 28px; font-size: 16px; }
+    .hero-tag { left: 20px; top: 90px; }
     .hero-side { display: none; }
-    .hero-content { padding: 0 24px; }
-    .vape-stage { right: -120px; opacity: 0.35; transform: translateY(-50%) scale(0.7); }
-    .vape-numeral { font-size: 320px; }
-    .hero { height: auto; min-height: 100vh; padding-bottom: 60px; }
-    .hero-content { padding: 140px 24px 40px; height: auto; }
-    .hero-bottom { position: static; margin: 40px 24px 0; flex-direction: column; align-items: flex-start; gap: 32px; }
-    .hero-stats { gap: 32px; }
-    .products, .categories { grid-template-columns: 1fr; }
-    .categories { grid-template-columns: repeat(2, 1fr); }
-    .about-grid { grid-template-columns: 1fr; gap: 48px; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .feature-callout { width: 200px; }
-    .marquee-item { font-size: 24px; gap: 50px; }
-    .marquee-track { gap: 50px; }
-    .review { width: 320px; }
-    .location-grid { grid-template-columns: 1fr; gap: 24px; }
-    .map-wrap { aspect-ratio: 4 / 3; }
-    .location-card { padding: 32px 24px; }
-    .location-card h3 { font-size: 32px; }
-    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-    .contact-channels { grid-template-columns: 1fr; }
+    .vape-stage { right: -160px; opacity: 0.22; transform: translateY(-50%) scale(0.6); }
+    .vape-numeral { font-size: 280px; opacity: 0.5; }
+    .hero { height: auto; min-height: 100vh; padding-bottom: 40px; }
+    .hero-content { padding: 130px 20px 24px; height: auto; }
+    .hero-headline-wrap { max-width: 100%; }
+    .hero h1 { font-size: clamp(40px, 11vw, 64px) !important; }
+    .hero-bottom { position: static; margin: 28px 20px 0; flex-direction: column; align-items: flex-start; gap: 24px; left: auto; right: auto; bottom: auto; }
+    .hero-bottom-left p { font-size: 14px; }
+    .hero-cta { width: 100%; }
+    .hero-cta .btn { flex: 1; justify-content: center; }
+    .hero-stats { gap: 20px; flex-wrap: wrap; }
+    .stat .num { font-size: 32px; }
+    .section { padding: 64px 0; }
+    .section-head { margin-bottom: 32px; padding-bottom: 20px; align-items: flex-start; }
+    .h-display { font-size: clamp(32px, 8vw, 48px); }
+    .about { padding: 64px 0; }
+    .categories { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .category { padding: 22px 18px; }
+    .category h4 { font-size: 20px; }
+    .category-num { font-size: 26px; top: 14px; right: 16px; }
+    .category-shape { width: 50px; height: 110px; }
+    .category-shape.pods { width: 70px; height: 90px; }
+    .category-shape.eliquids { width: 40px; height: 100px; }
+    .category-shape.access { width: 80px; height: 56px; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-image { aspect-ratio: 4/3; }
+    .about-image::after { font-size: 140px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+    .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
+    footer { padding: 56px 0 28px; }
+    .marquee-item { font-size: 22px; gap: 40px; }
+    .marquee-track { gap: 40px; }
+    .marquee { padding: 20px 0; }
+    .review { width: 280px; padding: 28px 22px; }
+    .review-quote { font-size: 17px; }
+    .locations { padding: 64px 0; }
+    .location-grid { grid-template-columns: 1fr; gap: 16px; }
+    .map-wrap { aspect-ratio: 1 / 1; }
+    .location-card { padding: 28px 22px; gap: 22px; }
+    .location-card h3 { font-size: 30px; }
+    .location-row .ico { width: 32px; height: 32px; }
+    .location-row .ico svg { width: 14px; height: 14px; }
+    .location-cta { flex-direction: column; align-items: stretch; }
+    .location-cta .btn { width: 100%; justify-content: center; }
+    .contact-section { padding: 64px 0; }
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+    .contact-channels { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
+    .channel { padding: 18px 20px; }
     .channel.featured { grid-column: span 1; }
-    .channel.featured .ch-val { font-size: 22px; }
-    .contact-form { padding: 28px 24px; }
+    .channel.featured .ch-val { font-size: 20px; }
+    .channel .ch-val { font-size: 17px; }
+    .contact-form { padding: 28px 22px; }
+    .contact-form h4 { font-size: 24px; }
+    .cta-banner { padding: 72px 0; }
+    .cta-banner .h-display { font-size: clamp(40px, 10vw, 64px); }
+    .btn { padding: 14px 22px; font-size: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 0 18px; }
+    .hero-tag { left: 18px; }
+    .hero-content { padding: 120px 18px 16px; }
+    .hero h1 { font-size: clamp(36px, 11vw, 56px) !important; }
+    .hero h1 .display-line { font-size: 0.36em; margin-top: 12px; }
+    .hero-bottom { margin: 24px 18px 0; }
+    .category { aspect-ratio: 4 / 5; }
+    .category h4 { font-size: 17px; }
+    .category-shape { width: 36px; height: 80px; }
+    .category-shape.pods { width: 56px; height: 70px; }
+    .category-shape.eliquids { width: 30px; height: 76px; }
+    .category-shape.access { width: 64px; height: 44px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    .channel.featured .ch-val { font-size: 18px; }
   }
 </style>
 </head>
@@ -1876,6 +1982,13 @@
     <div class="location-grid">
       <div class="map-wrap reveal">
         <span class="map-label">◉ Vape Shack · Victoria</span>
+        <div class="map-fallback" aria-hidden="true">
+          <div class="map-fallback-pin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-7.5 8-14a8 8 0 1 0-16 0c0 6.5 8 14 8 14z"/><circle cx="12" cy="8" r="3"/></svg>
+          </div>
+          <h4>Vape Shack Victoria</h4>
+          <p>207 Menzies Street<br>Victoria, BC V8V 2G7</p>
+        </div>
         <iframe
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
@@ -2223,16 +2336,41 @@
   window.addEventListener('resize', onScroll);
   onScroll();
 
-  // ============ Reveal observer ============
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  // ============ Reveal on scroll (rAF-based, robust) ============
+  // Why not IntersectionObserver: it's unreliable on instant programmatic
+  // scrolls and in some embedded/preview contexts. A simple rAF check
+  // every scroll/resize covers all cases.
+  (function () {
+    const els = Array.from(document.querySelectorAll('.reveal, .reveal-stagger, .word-reveal'));
+    let pending = els.slice();
+    let ticking = false;
 
-  document.querySelectorAll('.reveal, .reveal-stagger, .word-reveal').forEach(el => revealObserver.observe(el));
+    function check() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const trigger = vh - 60; // reveal once top crosses 60px from bottom of viewport
+      pending = pending.filter(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < trigger && r.bottom > 0) {
+          el.classList.add('in');
+          return false;
+        }
+        return true;
+      });
+    }
+    function request() {
+      if (!ticking) { ticking = true; requestAnimationFrame(check); }
+    }
+
+    // Initial: reveal anything already visible
+    check();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+
+    // Hard safety: after 3s, force-reveal anything still left
+    // (guarantees content is never permanently hidden, even if our hook fails)
+    setTimeout(() => { pending.forEach(el => el.classList.add('in')); pending = []; }, 3000);
+  })();
 
   // ============ Counter animation ============
   function animateCount(el) {
