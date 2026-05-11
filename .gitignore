@@ -1,0 +1,21 @@
+.DS_Store
+**/.DS_Store
+
+# Local-only working dirs
+_design/
+.claude/
+
+# Editor / OS
+*.bak
+*.tmp
+*.swp
+.idea/
+.vscode/
+
+# Env
+.env
+.env.local
+.env.*.local
+
+# Misc
+node_modules/
