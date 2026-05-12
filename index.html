@@ -333,6 +333,198 @@
     50% { box-shadow: 0 0 0 6px rgba(232,181,48,0); }
   }
 
+  /* ============ Locations dropdown (desktop) ============ */
+  .has-dropdown { position: relative; }
+  .has-dropdown > a { display: inline-flex; align-items: center; }
+  .dropdown {
+    list-style: none;
+    position: absolute;
+    top: 100%;
+    left: -16px;
+    min-width: 240px;
+    margin-top: 10px;
+    padding: 8px;
+    background: rgba(10, 10, 10, 0.94);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    z-index: 90;
+  }
+  .dropdown::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 24px;
+    width: 12px; height: 12px;
+    background: rgba(10, 10, 10, 0.94);
+    border-left: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  .has-dropdown:hover .dropdown,
+  .has-dropdown:focus-within .dropdown {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .dropdown li { list-style: none; }
+  .dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 14px;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase;
+    color: var(--ink-dim) !important;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+  }
+  .dropdown a::after { display: none !important; }
+  .dropdown a:hover {
+    color: var(--ink) !important;
+    background: rgba(232, 181, 48, 0.06);
+    border-color: rgba(232, 181, 48, 0.2);
+  }
+  .dropdown a .dd-city { font-weight: 600; color: var(--ink); }
+  .dropdown a:hover .dd-city { color: var(--gold); }
+  .dropdown a .dd-region { font-size: 9px; color: var(--ink-mute); letter-spacing: 0.18em; }
+  .dropdown .dd-tag {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    padding: 2px 6px;
+    border: 1px solid var(--gold-deep);
+    color: var(--gold-deep);
+    border-radius: 2px;
+  }
+  .dropdown .dd-nearest .dd-tag { color: var(--gold); border-color: var(--gold); background: rgba(232,181,48,0.06); }
+  .dropdown .dd-soon { opacity: 0.7; }
+
+  /* ============ Mobile hamburger + drawer ============ */
+  .nav-burger {
+    display: none;
+    width: 38px; height: 38px;
+    background: transparent;
+    border: 1px solid rgba(245,241,232,0.12);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    transition: border-color 0.3s;
+  }
+  .nav-burger span {
+    width: 16px; height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+    transform-origin: center;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+  .nav-burger:hover { border-color: var(--gold); }
+
+  .nav-drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: 100%;
+    max-width: 360px;
+    height: 100vh;
+    background: rgba(8, 8, 8, 0.98);
+    backdrop-filter: blur(24px);
+    border-left: 1px solid var(--line);
+    z-index: 95;
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.7, 0, 0.3, 1);
+    overflow-y: auto;
+    display: none;
+  }
+  .nav-drawer.open { transform: translateX(0); }
+  .nav-drawer-inner { padding: 96px 28px 32px; display: flex; flex-direction: column; gap: 24px; min-height: 100%; }
+  .nav-drawer-list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; }
+  .nav-drawer-list > li { list-style: none; }
+  .nav-drawer-list > li > a {
+    display: block;
+    padding: 14px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.3s, padding-left 0.3s;
+  }
+  .nav-drawer-list > li > a:hover { color: var(--gold); padding-left: 8px; }
+  .drawer-group-label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+    padding: 14px 0 6px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .nav-drawer-sub { list-style: none; padding: 6px 0 14px 18px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .nav-drawer-sub li { list-style: none; }
+  .nav-drawer-sub a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: color 0.3s, padding-left 0.3s;
+  }
+  .nav-drawer-sub a:hover { color: var(--gold); padding-left: 6px; }
+  .nav-drawer-sub .dd-nearest a { color: var(--gold); }
+  .nav-drawer-sub .dd-tag {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .nav-drawer-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .nav-drawer-foot a {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-drawer-foot a:hover { color: var(--gold); }
+
+  .nav-drawer-backdrop {
+    position: fixed; inset: 0; z-index: 90;
+    background: rgba(0,0,0,0.6);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+  .nav-drawer-backdrop.open { opacity: 1; visibility: visible; }
+  body.drawer-open { overflow: hidden; }
+
   /* ============ HERO (rebuilt) ============ */
   .hero {
     height: 100vh;
@@ -1378,6 +1570,130 @@
   .location-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
   .location-cta .btn { padding: 14px 22px; font-size: 11px; }
 
+  /* Nearest-store banner */
+  .nearest-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    margin: -16px 0 32px;
+    background: rgba(232, 181, 48, 0.06);
+    border: 1px solid rgba(232, 181, 48, 0.22);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    flex-wrap: wrap;
+  }
+  .nearest-banner strong { color: var(--gold); font-weight: 600; }
+  .nb-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--gold);
+    animation: blink 1.8s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .nb-text { flex: 1; min-width: 200px; }
+  .nb-link { color: var(--gold) !important; text-decoration: none; }
+  .nb-link:hover { color: var(--gold-hot) !important; }
+
+  /* All locations grid */
+  .all-stores { margin-top: 80px; }
+  .all-stores-head {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .all-stores-head h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1;
+    margin-top: 14px;
+  }
+  .all-stores-head h3 em { font-style: normal; color: var(--gold); font-weight: 400; }
+  .store-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .store-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 22px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.4s, transform 0.4s, background 0.4s;
+    overflow: hidden;
+    min-height: 200px;
+  }
+  .store-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transition: left 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+  }
+  .store-card:hover { border-color: var(--gold); transform: translateY(-4px); background: #161616; }
+  .store-card:hover::before { left: 100%; }
+  .store-card.is-nearest {
+    border-color: rgba(232, 181, 48, 0.5);
+    background: linear-gradient(180deg, rgba(232, 181, 48, 0.05), transparent);
+  }
+  .store-card.is-soon { opacity: 0.7; }
+  .store-card-tag {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 3px 8px;
+  }
+  .store-card-tag.tag-soon { color: var(--ink-mute); border-color: var(--ink-mute); }
+  .store-card-city {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--ink);
+    margin-top: auto;
+  }
+  .store-card.is-nearest .store-card-city { color: var(--gold); }
+  .store-card-brand {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .store-card-addr {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+  .store-card-arrow {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s;
+  }
+  .store-card:hover .store-card-arrow { gap: 14px; }
+
   /* Contact */
   .contact-section { padding: 96px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
   .contact-section::before {
@@ -1676,6 +1992,9 @@
     nav.top.scrolled { padding: 10px 20px; }
     .nav-links { display: none; }
     .nav-icon { width: 38px; height: 38px; }
+    .nav-icon-contact { display: none; }
+    .nav-burger { display: flex; }
+    .nav-drawer { display: block; }
     .logo { font-size: 22px; }
     .logo-mark { width: 28px; height: 28px; font-size: 16px; }
     .hero-tag { left: 20px; top: 90px; }
@@ -1724,6 +2043,11 @@
     .location-row .ico svg { width: 14px; height: 14px; }
     .location-cta { flex-direction: column; align-items: stretch; }
     .location-cta .btn { width: 100%; justify-content: center; }
+    .nearest-banner { font-size: 10px; padding: 10px 14px; gap: 10px; }
+    .all-stores { margin-top: 56px; }
+    .store-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .store-card { padding: 18px 16px; min-height: 170px; }
+    .store-card-city { font-size: 22px; }
     .contact-section { padding: 64px 0; }
     .contact-grid { grid-template-columns: 1fr; gap: 32px; }
     .contact-channels { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
@@ -1784,7 +2108,15 @@
   <ul class="nav-links">
     <li><a href="#top" class="nav-anchor active" data-target="top">Home</a></li>
     <li><a href="#about" class="nav-anchor" data-target="about">About</a></li>
-    <li><a href="#locations" class="nav-anchor" data-target="locations">Locations</a></li>
+    <li class="has-dropdown">
+      <a href="#locations" class="nav-anchor" data-target="locations">
+        Locations
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" style="margin-left:6px;vertical-align:middle"><path d="M2 4l3 3 3-3"/></svg>
+      </a>
+      <ul class="dropdown" id="locationsDropdown">
+        <!-- populated by JS from STORES -->
+      </ul>
+    </li>
     <li><a href="#contact" class="nav-anchor" data-target="contact">Contact</a></li>
   </ul>
   <div class="nav-actions">
@@ -1794,11 +2126,34 @@
     <a href="https://wa.me/17789310879" target="_blank" rel="noopener" class="nav-icon" aria-label="WhatsApp">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 13.5l1-3A6 6 0 1 1 5.5 13l-3 0.5z"/><path d="M6 6c0.2 1.5 2 3.3 3.5 3.6l0.9-0.9 1.6 0.8c-0.2 1-1.3 1.7-2.5 1.4C7.6 10.5 5.6 8.6 5 6.7 4.7 5.5 5.4 4.4 6.4 4.2L7.2 5.8 6 6z" stroke-linejoin="round"/></svg>
     </a>
-    <a href="#contact" class="nav-icon" aria-label="Contact">
+    <a href="#contact" class="nav-icon nav-icon-contact" aria-label="Contact">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 4l6 5 6-5"/></svg>
     </a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <div class="nav-drawer-inner">
+    <ul class="nav-drawer-list">
+      <li><a href="#top" data-drawer-close>Home</a></li>
+      <li><a href="#about" data-drawer-close>About</a></li>
+      <li>
+        <div class="drawer-group-label">Locations</div>
+        <ul class="nav-drawer-sub" id="drawerLocations"><!-- populated by JS --></ul>
+      </li>
+      <li><a href="#contact" data-drawer-close>Contact</a></li>
+    </ul>
+    <div class="nav-drawer-foot">
+      <a href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://wa.me/17789310879" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="tel:+17789310879">Call us</a>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1971,40 +2326,47 @@
   <div class="container">
     <div class="section-head">
       <div class="left">
-        <span class="eyebrow reveal">Find us</span>
+        <span class="eyebrow reveal" id="locEyebrow">Find us</span>
         <div class="h-display reveal">Visit the <em>shack</em>.</div>
       </div>
-      <a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener" class="reveal">Get directions
+      <a href="#" id="locDirectionsTop" target="_blank" rel="noopener" class="reveal">Get directions
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
       </a>
     </div>
 
+    <div class="nearest-banner reveal" id="nearestBanner" hidden>
+      <span class="nb-dot"></span>
+      <span class="nb-text">Showing your nearest store · <strong id="nbCity">Victoria</strong></span>
+      <a href="#allStores" class="nb-link">Not you? Pick another →</a>
+    </div>
+
     <div class="location-grid">
       <div class="map-wrap reveal">
-        <span class="map-label">◉ Vape Shack · Victoria</span>
+        <span class="map-label" id="locMapLabel">◉ Vape Shack · Victoria</span>
         <div class="map-fallback" aria-hidden="true">
           <div class="map-fallback-pin">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-7.5 8-14a8 8 0 1 0-16 0c0 6.5 8 14 8 14z"/><circle cx="12" cy="8" r="3"/></svg>
           </div>
-          <h4>Vape Shack Victoria</h4>
-          <p>207 Menzies Street<br>Victoria, BC V8V 2G7</p>
+          <h4 id="locFallbackName">Vape Shack Victoria</h4>
+          <p id="locFallbackAddr">207 Menzies Street<br>Victoria, BC V8V 2G6</p>
         </div>
         <iframe
+          id="locMapIframe"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps?q=207%20Menzies%20Street%2C%20Victoria%2C%20BC%20V8V%202G7&output=embed"
-          title="Map to Vape Shack, 207 Menzies Street, Victoria BC"
+          src="https://www.google.com/maps?q=207%20Menzies%20Street%2C%20Victoria%2C%20BC%20V8V%202G6&output=embed"
+          title="Map to Vape Shack"
           allowfullscreen></iframe>
       </div>
 
       <div class="location-card reveal">
-        <h3>Vape Shack <em>Victoria</em></h3>
+        <h3 id="locCardTitle">Vape Shack <em>Victoria</em></h3>
 
         <div class="location-row">
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14s5-5 5-9a5 5 0 0 0-10 0c0 4 5 9 5 9z"/><circle cx="8" cy="5" r="2"/></svg></div>
           <div class="meta">
             <div class="lbl">Address</div>
-            <div class="val"><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">207 Menzies Street<br>Victoria, BC V8V 2G7</a></div>
+            <div class="val"><a id="locAddressLink" href="#" target="_blank" rel="noopener" id="locAddressLine">207 Menzies Street<br>Victoria, BC V8V 2G6</a></div>
           </div>
         </div>
 
@@ -2012,15 +2374,7 @@
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg></div>
           <div class="meta">
             <div class="lbl">Hours</div>
-            <div class="hours-list" id="hoursList">
-              <div class="hours-row" data-day="0"><span class="day">Sunday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="1"><span class="day">Monday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="2"><span class="day">Tuesday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="3"><span class="day">Wednesday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="4"><span class="day">Thursday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="5"><span class="day">Friday</span><span>8:00 AM – 12:00 AM</span></div>
-              <div class="hours-row" data-day="6"><span class="day">Saturday</span><span>8:00 AM – 12:00 AM</span></div>
-            </div>
+            <div class="hours-list" id="hoursList"></div>
           </div>
         </div>
 
@@ -2028,17 +2382,27 @@
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h3l1.5 4-2 1c1 2 2.5 3.5 4.5 4.5l1-2 4 1.5v3a1 1 0 0 1-1 1A11 11 0 0 1 2 4a1 1 0 0 1 1-1z"/></svg></div>
           <div class="meta">
             <div class="lbl">Phone</div>
-            <div class="val"><a href="tel:+17789310879">+1 (778) 931-0879</a></div>
+            <div class="val"><a id="locPhoneLink" href="tel:+17789310879">+1 (778) 931-0879</a></div>
           </div>
         </div>
 
         <div class="location-cta">
-          <a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener" class="btn">Get Directions
+          <a id="locDirectionsBtn" href="#" target="_blank" rel="noopener" class="btn">Get Directions
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
           </a>
-          <a href="https://wa.me/17789310879?text=Hi%20Vape%20Shack%2C" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp Us</a>
+          <a id="locWhatsappBtn" href="#" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp Us</a>
+          <a id="locStorePage" href="#" class="btn btn-ghost">View Store →</a>
         </div>
       </div>
+    </div>
+
+    <!-- All locations grid -->
+    <div class="all-stores reveal" id="allStores">
+      <div class="all-stores-head">
+        <span class="eyebrow">All locations</span>
+        <h3>5 stores across <em>British Columbia</em></h3>
+      </div>
+      <div class="store-grid" id="storeGrid"><!-- populated by JS --></div>
     </div>
   </div>
 </section>
@@ -2214,12 +2578,13 @@
         </ul>
       </div>
       <div>
-        <h5>Visit</h5>
+        <h5>Locations</h5>
         <ul>
-          <li><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">207 Menzies Street<br>Victoria, BC V8V 2G7</a></li>
-          <li><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">Get directions →</a></li>
-          <li><a href="#locations">Sun–Thu · 8am–11pm</a></li>
-          <li><a href="#locations">Fri–Sat · 8am–12am</a></li>
+          <li><a href="store.html?city=victoria">Victoria · 207 Menzies St</a></li>
+          <li><a href="store.html?city=osoyoos">Osoyoos · 8141 Main St</a></li>
+          <li><a href="store.html?city=princeton">Princeton · 133 Vermilion Ave</a></li>
+          <li><a href="store.html?city=peachland">Peachland · 5500 Clement Cr</a></li>
+          <li><a href="store.html?city=sidney">Sidney · 2310 Beacon Ave · Soon</a></li>
         </ul>
       </div>
       <div>
@@ -2239,6 +2604,7 @@
   </div>
 </footer>
 
+<script src="assets/stores.js"></script>
 <script>
   // ============ AGE GATE ============
   function enterSite() {
@@ -2404,11 +2770,179 @@
     document.querySelectorAll('.hero .reveal, .hero .reveal-stagger').forEach(el => el.classList.add('in'));
   }, 200);
 
-  // ============ Highlight today's hours ============
+  // ============ STORES: dropdown, drawer, locations, IP detect ============
   (function () {
-    const today = new Date().getDay();
-    const row = document.querySelector('.hours-row[data-day="' + today + '"]');
-    if (row) row.classList.add('is-today');
+    if (!window.STORES) return;
+    const stores = window.STORES;
+    const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+
+    // -- Populate nav dropdown --
+    const dd = document.getElementById('locationsDropdown');
+    if (dd) {
+      dd.innerHTML = stores.map(s => `
+        <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
+          <a href="store.html?city=${s.id}">
+            <span>
+              <span class="dd-city">${escapeHtml(s.city)}</span>
+              <span class="dd-region">· ${escapeHtml(s.region)}</span>
+            </span>
+            ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
+          </a>
+        </li>
+      `).join('');
+    }
+
+    // -- Populate mobile drawer locations --
+    const drawer = document.getElementById('drawerLocations');
+    if (drawer) {
+      drawer.innerHTML = stores.map(s => `
+        <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
+          <a href="store.html?city=${s.id}">
+            <span>${escapeHtml(s.city)}</span>
+            ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
+          </a>
+        </li>
+      `).join('');
+    }
+
+    // -- Populate "all locations" grid --
+    const grid = document.getElementById('storeGrid');
+    if (grid) {
+      grid.innerHTML = stores.map(s => `
+        <a href="store.html?city=${s.id}" class="store-card ${s.status === 'coming-soon' ? 'is-soon' : ''}" data-store-id="${s.id}">
+          ${s.status === 'coming-soon'
+            ? '<span class="store-card-tag tag-soon">Coming Soon</span>'
+            : '<span class="store-card-tag" data-role="open">Open</span>'}
+          <div>
+            <div class="store-card-brand">${escapeHtml(s.brand)}</div>
+            <div class="store-card-city">${escapeHtml(s.city)}</div>
+          </div>
+          <div class="store-card-addr">${escapeHtml(s.addressLine)}<br>${escapeHtml(s.city)}, ${escapeHtml(s.region)}</div>
+          <span class="store-card-arrow">View store →</span>
+        </a>
+      `).join('');
+    }
+
+    // -- Render featured (nearest) store --
+    function renderHours(store, container) {
+      if (!container) return;
+      const today = new Date().getDay();
+      container.innerHTML = store.hours.map((row, i) => `
+        <div class="hours-row ${i === today ? 'is-today' : ''}" data-day="${i}">
+          <span class="day">${escapeHtml(row[0])}</span><span>${escapeHtml(row[1])}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderFeatured(store, isNearestDetected) {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      const setHref = (id, val) => { const el = document.getElementById(id); if (el) el.setAttribute('href', val); };
+
+      // Card title — italicize the last word for the gold accent
+      const nameWords = store.name.split(' ');
+      const lastWord = escapeHtml(nameWords.pop());
+      const prefix = escapeHtml(nameWords.join(' '));
+      setHtml('locCardTitle', `${prefix} <em>${lastWord}</em>`);
+
+      // Map fallback
+      set('locFallbackName', store.name);
+      setHtml('locFallbackAddr', `${escapeHtml(store.addressLine)}<br>${escapeHtml(store.city)}, ${escapeHtml(store.region)} ${escapeHtml(store.postal)}`);
+
+      // Map label
+      set('locMapLabel', `◉ ${store.name}`);
+
+      // Iframe src
+      const iframe = document.getElementById('locMapIframe');
+      if (iframe) iframe.src = `https://www.google.com/maps?q=${store.embedQ}&output=embed`;
+
+      // Address row
+      const addr = document.getElementById('locAddressLink');
+      if (addr) {
+        addr.setAttribute('href', store.mapsUrl);
+        addr.innerHTML = `${escapeHtml(store.addressLine)}<br>${escapeHtml(store.city)}, ${escapeHtml(store.region)} ${escapeHtml(store.postal)}`;
+      }
+
+      // Phone
+      const phone = document.getElementById('locPhoneLink');
+      if (phone) { phone.textContent = store.phone; phone.setAttribute('href', store.phoneHref); }
+
+      // CTAs
+      setHref('locDirectionsBtn', store.mapsUrl);
+      setHref('locDirectionsTop', store.mapsUrl);
+      setHref('locWhatsappBtn', `https://wa.me/${store.whatsapp}?text=Hi%20${encodeURIComponent(store.brand)}%2C`);
+      setHref('locStorePage', `store.html?city=${store.id}`);
+
+      // Hours
+      renderHours(store, document.getElementById('hoursList'));
+
+      // Nearest badge
+      if (isNearestDetected) {
+        const b = document.getElementById('nearestBanner');
+        if (b) { b.removeAttribute('hidden'); set('nbCity', store.city); }
+        const ey = document.getElementById('locEyebrow');
+        if (ey) ey.textContent = `Nearest to you · ${store.city}`;
+      }
+
+      // Mark dropdown items
+      document.querySelectorAll('[data-store-id]').forEach(el => el.classList.remove('dd-nearest'));
+      document.querySelectorAll(`[data-store-id="${store.id}"]`).forEach(el => el.classList.add('dd-nearest'));
+
+      // Mark store-grid card as nearest
+      const card = document.querySelector(`.store-card[data-store-id="${store.id}"]`);
+      if (card && isNearestDetected) {
+        card.classList.add('is-nearest');
+        const tag = card.querySelector('[data-role="open"]');
+        if (tag) tag.textContent = 'Nearest';
+      }
+    }
+
+    // Initial paint with Victoria (synchronous, no flash of empty content).
+    const defaultStore = stores[0];
+    renderFeatured(defaultStore, false);
+
+    // Then async-detect and re-render if a different store is closer.
+    if (typeof window.detectLocation === 'function') {
+      window.detectLocation().then(geo => {
+        if (!geo) return;
+        const nearest = window.findNearestStore(geo.lat, geo.lng);
+        if (nearest && nearest.id !== defaultStore.id) {
+          renderFeatured(nearest, true);
+        } else if (nearest) {
+          // Same store but still mark it as the detected nearest
+          renderFeatured(nearest, true);
+        }
+      }).catch(() => {});
+    }
+  })();
+
+  // ============ Mobile drawer toggle ============
+  (function () {
+    const burger = document.getElementById('navBurger');
+    const drawer = document.getElementById('navDrawer');
+    if (!burger || !drawer) return;
+    let backdrop = document.querySelector('.nav-drawer-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'nav-drawer-backdrop';
+      document.body.appendChild(backdrop);
+    }
+    function setOpen(open) {
+      burger.classList.toggle('open', open);
+      drawer.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+      document.body.classList.toggle('drawer-open', open);
+    }
+    burger.addEventListener('click', () => setOpen(!drawer.classList.contains('open')));
+    backdrop.addEventListener('click', () => setOpen(false));
+    drawer.addEventListener('click', (e) => {
+      if (e.target.matches('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
   })();
 
   // ============ Smooth scroll for ALL in-page anchors ============
