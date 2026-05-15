@@ -1,0 +1,23 @@
+# Caddy reverse proxy with auto Let's Encrypt for the Hostinger default hostname.
+# Override at deploy time with the SITE_HOST env var if you bring a custom domain.
+{$SITE_HOST:srv844822.hstgr.cloud} {
+	encode gzip zstd
+
+	header {
+		X-Frame-Options       "SAMEORIGIN"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy        "strict-origin-when-cross-origin"
+		Permissions-Policy     "camera=(), microphone=(), geolocation=()"
+		# HSTS — only after you're confident TLS is solid
+		Strict-Transport-Security "max-age=31536000"
+	}
+
+	# Forward everything to the nginx container on the internal network
+	reverse_proxy web:80
+
+	# Caddy access log → stdout (visible via `docker compose logs caddy`)
+	log {
+		output stdout
+		format console
+	}
+}
