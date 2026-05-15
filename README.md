@@ -41,13 +41,35 @@ HOST_PORT=3000 docker compose up --build -d
 └── README.md
 ```
 
-## Deploy to the Hostinger VPS (Traefik subdomain)
+## Deploy to the Hostinger VPS (Traefik + vapeshacks.com)
 
-The VPS already runs `root-traefik-1` (the reverse proxy) on the `root_default` Docker network, with other apps like `n8n.srv844822.hstgr.cloud` and `buffer.srv844822.hstgr.cloud` already routed through it. This compose file plugs in alongside them — no ports are published, no other containers restart, Traefik provisions a Let's Encrypt cert automatically.
+The VPS already runs `root-traefik-1` (the reverse proxy) on the `root_default` Docker network, with other apps like `n8n.srv844822.hstgr.cloud` already routed through it. This compose file plugs in alongside them — no ports published, no other containers restart, Traefik provisions a Let's Encrypt cert automatically.
 
-**Default subdomain:** `https://vape.srv844822.hstgr.cloud`
+**Domain:** `https://vapeshacks.com` (and `www.` redirects to it)
 
-### First deploy
+### Step 1 — point DNS at the VPS
+
+Find the VPS public IP:
+
+```sh
+curl -s ifconfig.me        # run on the VPS
+```
+
+At the registrar where `vapeshacks.com` was bought, add:
+
+| Type | Name | Value |
+|------|------|-------|
+| A    | `@`  | `<VPS_IP>` |
+| A    | `www`| `<VPS_IP>` |
+
+DNS propagation usually takes a few minutes to a couple of hours. Check with:
+
+```sh
+dig vapeshacks.com +short      # should return <VPS_IP>
+dig www.vapeshacks.com +short  # should return <VPS_IP>
+```
+
+### Step 2 — deploy
 
 ```sh
 # SSH to the VPS, then:
@@ -56,13 +78,13 @@ cd vape-chadha
 docker compose up --build -d
 ```
 
-Wait ~30 seconds for Traefik to fetch a fresh cert, then:
+Once DNS resolves, Traefik fetches the cert on the first request (~15s). Then:
 
 ```sh
-curl -I https://vape.srv844822.hstgr.cloud/healthz   # → HTTP/2 200
+curl -I https://vapeshacks.com/healthz   # → HTTP/2 200
 ```
 
-Open `https://vape.srv844822.hstgr.cloud` in a browser.
+Open `https://vapeshacks.com` in a browser.
 
 ### Updating
 
@@ -72,24 +94,7 @@ git pull
 docker compose up --build -d
 ```
 
-`--build` is required for HTML/CSS/JS changes — they're baked into the image. Traefik continues routing during the brief container restart.
-
-### Using a different subdomain
-
-Set `PUBLIC_HOST` in a `.env` file next to the compose file:
-
-```sh
-echo 'PUBLIC_HOST=vapeshack.srv844822.hstgr.cloud' > .env
-docker compose up -d
-```
-
-Or override one-shot:
-
-```sh
-PUBLIC_HOST=shop.vapeshack.ca docker compose up -d
-```
-
-(For a real custom domain, point DNS at the VPS IP first.)
+`--build` is required for HTML/CSS/JS changes — they're baked into the image. Traefik keeps routing during the brief container restart.
 
 ### Rollback
 
