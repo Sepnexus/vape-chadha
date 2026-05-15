@@ -41,36 +41,83 @@ HOST_PORT=3000 docker compose up --build -d
 └── README.md
 ```
 
-## Deploy to a server
+## Deploy to the Hostinger VPS (Traefik subdomain)
 
-Anywhere with Docker + docker compose v2.
+The VPS already runs `root-traefik-1` (the reverse proxy) on the `root_default` Docker network, with other apps like `n8n.srv844822.hstgr.cloud` and `buffer.srv844822.hstgr.cloud` already routed through it. This compose file plugs in alongside them — no ports are published, no other containers restart, Traefik provisions a Let's Encrypt cert automatically.
+
+**Default subdomain:** `https://vape.srv844822.hstgr.cloud`
+
+### First deploy
 
 ```sh
-# On the server:
+# SSH to the VPS, then:
 git clone git@github.com:Sepnexus/vape-chadha.git
 cd vape-chadha
 docker compose up --build -d
-
-# Health check
-curl http://localhost:8080/healthz   # → "ok"
 ```
 
-Put it behind nginx / Caddy / Cloudflare on port 80/443 and forward to `localhost:8080`. Example Caddy config:
-
-```
-vapeshack.example.com {
-  reverse_proxy localhost:8080
-}
-```
-
-### Updating the live site
+Wait ~30 seconds for Traefik to fetch a fresh cert, then:
 
 ```sh
+curl -I https://vape.srv844822.hstgr.cloud/healthz   # → HTTP/2 200
+```
+
+Open `https://vape.srv844822.hstgr.cloud` in a browser.
+
+### Updating
+
+```sh
+cd vape-chadha
 git pull
 docker compose up --build -d
 ```
 
-The container has a `HEALTHCHECK` and `restart: unless-stopped`, so it self-heals on crash and on reboot.
+`--build` is required for HTML/CSS/JS changes — they're baked into the image. Traefik continues routing during the brief container restart.
+
+### Using a different subdomain
+
+Set `PUBLIC_HOST` in a `.env` file next to the compose file:
+
+```sh
+echo 'PUBLIC_HOST=vapeshack.srv844822.hstgr.cloud' > .env
+docker compose up -d
+```
+
+Or override one-shot:
+
+```sh
+PUBLIC_HOST=shop.vapeshack.ca docker compose up -d
+```
+
+(For a real custom domain, point DNS at the VPS IP first.)
+
+### Rollback
+
+```sh
+cd vape-chadha
+docker compose down
+```
+
+Stops only the `vape-shack` container — Traefik, Postgres, n8n, webhook-buffer all keep running.
+
+### Troubleshooting
+
+**`network root_default not found`**
+The Traefik network is named differently on the host. Run `docker network ls` and edit `docker-compose.yml` to use the actual name.
+
+**Traefik returns 404**
+The container needs to be on the network Traefik watches:
+```sh
+docker inspect vape-shack --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+# → root_default
+```
+
+**SSL cert never appears (`curl` cert error)**
+Traefik gets certs via TLS challenge from Let's Encrypt. Confirm the DNS:
+```sh
+dig vape.srv844822.hstgr.cloud +short
+```
+should return the VPS public IP. First-time issuance can take up to 60s.
 
 ## Editing content
 

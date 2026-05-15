@@ -1,14 +1,37 @@
+# Vape Shack — runs on the Hostinger VPS alongside the existing
+# root-traefik-1 / postgresql / n8n / webhook-buffer containers.
+# Traefik (already on the host) routes `https://${PUBLIC_HOST}/*` to this
+# container via the labels below — no ports are published.
+#
+# Default subdomain is `vape.srv844822.hstgr.cloud`. Override with
+#   PUBLIC_HOST=other.subdomain docker compose up -d
+# or put PUBLIC_HOST=… in a .env file beside this compose file.
+
 services:
   web:
     build: .
     image: vape-shack:latest
     container_name: vape-shack
     restart: unless-stopped
-    ports:
-      - "${HOST_PORT:-8080}:80"
+    environment:
+      PUBLIC_HOST: ${PUBLIC_HOST:-vape.srv844822.hstgr.cloud}
+    networks:
+      - root_default
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_default"
+      - "traefik.http.routers.vape-shack.rule=Host(`${PUBLIC_HOST:-vape.srv844822.hstgr.cloud}`)"
+      - "traefik.http.routers.vape-shack.entrypoints=web,websecure"
+      - "traefik.http.routers.vape-shack.tls=true"
+      - "traefik.http.routers.vape-shack.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.vape-shack.loadbalancer.server.port=80"
+
+networks:
+  root_default:
+    external: true
