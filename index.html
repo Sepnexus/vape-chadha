@@ -186,13 +186,18 @@
   .age-gate-card::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
   .age-gate-card::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
   .age-gate-logo {
+    margin-bottom: 32px;
+  }
+  .age-gate-logo-img { height: 60px; width: auto; display: inline-block; }
+  .age-gate-logo-text {
+    display: none;
     font-family: var(--display);
     font-size: 36px;
     letter-spacing: 0.04em;
     color: var(--gold);
     transform: skewX(-8deg);
-    margin-bottom: 32px;
   }
+  .age-gate-logo.no-logo-img .age-gate-logo-text { display: inline-block; }
   .age-gate h2 {
     font-family: var(--serif);
     font-style: italic;
@@ -238,17 +243,29 @@
     padding: 14px 48px;
   }
   .logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    cursor: auto;
+  }
+  .logo-img {
+    height: 34px;
+    width: auto;
+    display: block;
+    transition: height 0.4s;
+  }
+  nav.top.scrolled .logo-img { height: 28px; }
+  .logo-lockup {
+    display: none;
+    align-items: center;
+    gap: 10px;
     font-family: var(--display);
     font-size: 26px;
     letter-spacing: 0.06em;
     color: var(--ink);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
     transform: skewX(-8deg);
-    cursor: auto;
   }
+  .logo.no-logo-img .logo-lockup { display: flex; }
   .logo-mark {
     width: 32px;
     height: 32px;
@@ -1379,6 +1396,23 @@
     line-height: 1.6;
   }
   .about-image-meta b { color: var(--gold); font-weight: 500; }
+  /* Real photo variant */
+  .about-image.has-photo { background: var(--bg-2); }
+  .about-image.has-photo::before {
+    content: "";
+    inset: 0; bottom: auto;
+    top: 0; right: 0;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 55%, rgba(8,8,8,0.6));
+    z-index: 1;
+  }
+  .about-image.has-photo::after { content: none; }
+  .about-image.has-photo img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+  }
+  .about-image.has-photo .about-image-meta { z-index: 2; color: var(--ink); }
   .about-text p { color: var(--ink-dim); margin: 28px 0; font-size: 16px; max-width: 480px; }
   .about-stats {
     display: grid;
@@ -1949,7 +1983,9 @@
     display: inline-block;
   }
   .footer-grid ul li a:hover { color: var(--gold); padding-left: 6px; }
-  .footer-brand .logo { font-size: 32px; margin-bottom: 20px; }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-lockup { font-size: 32px; }
+  .footer-brand .logo-img { height: 44px; }
   .footer-brand p { color: var(--ink-dim); font-size: 14px; max-width: 360px; line-height: 1.6; }
   .footer-bottom {
     display: flex;
@@ -1995,7 +2031,9 @@
     .nav-icon-contact { display: none; }
     .nav-burger { display: flex; }
     .nav-drawer { display: block; }
-    .logo { font-size: 22px; }
+    .logo-lockup { font-size: 22px; }
+    .logo-img { height: 28px; }
+    nav.top.scrolled .logo-img { height: 26px; }
     .logo-mark { width: 28px; height: 28px; font-size: 16px; }
     .hero-tag { left: 20px; top: 90px; }
     .hero-side { display: none; }
@@ -2088,7 +2126,10 @@
 <!-- AGE GATE -->
 <div class="age-gate" id="ageGate">
   <div class="age-gate-card">
-    <div class="age-gate-logo">VAPE SHACK</div>
+    <div class="age-gate-logo">
+      <img src="assets/logo.png" alt="Vape Shack" class="age-gate-logo-img" onerror="this.closest('.age-gate-logo').classList.add('no-logo-img');this.remove();">
+      <span class="age-gate-logo-text">VAPE SHACK</span>
+    </div>
     <h2>Are you 19 or older?</h2>
     <p>This site contains products intended for adults of legal smoking age. By entering, you confirm you are 19+ — the legal age in British Columbia.</p>
     <div class="age-gate-actions">
@@ -2102,8 +2143,11 @@
 <!-- NAV -->
 <nav class="top" id="topNav">
   <a href="#top" class="logo">
-    <span class="logo-mark">V</span>
-    <span>VAPE</span><span class="shack">SHACK</span>
+    <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
+    <span class="logo-lockup">
+      <span class="logo-mark">V</span>
+      <span>VAPE</span><span class="shack">SHACK</span>
+    </span>
   </a>
   <ul class="nav-links">
     <li><a href="#top" class="nav-anchor active" data-target="top">Home</a></li>
@@ -2299,7 +2343,9 @@
   <div class="container">
     <div class="about-grid">
       <div class="about-image-wrap" id="aboutImageWrap">
-        <div class="about-image">
+        <div class="about-image has-photo">
+          <img src="assets/photos/victoria.jpg" alt="Vape Shack Victoria storefront on Menzies Street" loading="lazy"
+               onerror="this.closest('.about-image').classList.remove('has-photo');this.remove();">
           <div class="about-image-meta">EST. <b>2022</b><br>VICTORIA, BC</div>
         </div>
       </div>
@@ -2563,8 +2609,11 @@
     <div class="footer-grid">
       <div class="footer-brand">
         <a href="#top" class="logo">
-          <span class="logo-mark">V</span>
-          <span>VAPE</span><span class="shack">SHACK</span>
+          <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
+          <span class="logo-lockup">
+            <span class="logo-mark">V</span>
+            <span>VAPE</span><span class="shack">SHACK</span>
+          </span>
         </a>
         <p>Independent vape shop on Menzies Street, Victoria BC. Curated devices, honest advice, late hours. Walk in.</p>
       </div>

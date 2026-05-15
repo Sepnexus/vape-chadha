@@ -32,6 +32,7 @@ window.STORES = [
     ],
     status: 'open',
     tagline: 'Our flagship — open late, downtown.',
+    photo: 'assets/photos/victoria.jpg',
   },
   {
     id: 'osoyoos',
@@ -61,6 +62,7 @@ window.STORES = [
     ],
     status: 'open',
     tagline: 'Right on Main Street in the heart of the South Okanagan.',
+    photo: null,
   },
   {
     id: 'princeton',
@@ -90,6 +92,7 @@ window.STORES = [
     ],
     status: 'open',
     tagline: 'A short walk off the highway — your Similkameen stop.',
+    photo: null,
   },
   {
     id: 'peachland',
@@ -119,6 +122,7 @@ window.STORES = [
     ],
     status: 'open',
     tagline: 'Lakeside, easy parking, friendly staff.',
+    photo: null,
   },
   {
     id: 'sidney',
@@ -148,6 +152,7 @@ window.STORES = [
     ],
     status: 'coming-soon',
     tagline: 'Opening soon on Beacon Ave.',
+    photo: null,
   },
 ];
 
