@@ -5,6 +5,8 @@ LABEL org.opencontainers.image.source="https://github.com/Sepnexus/vape-chadha"
 
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 COPY index.html /usr/share/nginx/html/index.html
+COPY store.html /usr/share/nginx/html/store.html
+COPY assets /usr/share/nginx/html/assets
 
 EXPOSE 80
 

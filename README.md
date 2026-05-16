@@ -15,18 +15,17 @@ Static HTML/CSS/JS (no build step). Served by nginx in a container.
 
 ## Run locally
 
-Open `index.html` directly in a browser, **or** with Docker:
+Use the dev server — it reproduces the production clean-URL routing
+(`/victoria` → `store.html`), which a plain file open or `python -m
+http.server` would not:
 
 ```sh
-docker compose up --build
-# → http://localhost:8080
+python3 dev-server.py
+# → http://localhost:5173
 ```
 
-Change the host port via `HOST_PORT` env var:
-
-```sh
-HOST_PORT=3000 docker compose up --build -d
-```
+Routes: `/` → home, `/victoria` `/osoyoos` `/princeton` `/peachland`
+`/sidney` → that store's page.
 
 ## Project layout
 
@@ -41,36 +40,88 @@ HOST_PORT=3000 docker compose up --build -d
 └── README.md
 ```
 
-## Deploy to a server
+## Deploy to the Hostinger VPS (Traefik + vapeshacks.com)
 
-Anywhere with Docker + docker compose v2.
+The VPS already runs `root-traefik-1` (the reverse proxy) on the `root_default` Docker network, with other apps like `n8n.srv844822.hstgr.cloud` already routed through it. This compose file plugs in alongside them — no ports published, no other containers restart, Traefik provisions a Let's Encrypt cert automatically.
+
+**Domain:** `https://vapeshacks.com` (and `www.` redirects to it)
+
+### Step 1 — point DNS at the VPS
+
+Find the VPS public IP:
 
 ```sh
-# On the server:
+curl -s ifconfig.me        # run on the VPS
+```
+
+At the registrar where `vapeshacks.com` was bought, add:
+
+| Type | Name | Value |
+|------|------|-------|
+| A    | `@`  | `<VPS_IP>` |
+| A    | `www`| `<VPS_IP>` |
+
+DNS propagation usually takes a few minutes to a couple of hours. Check with:
+
+```sh
+dig vapeshacks.com +short      # should return <VPS_IP>
+dig www.vapeshacks.com +short  # should return <VPS_IP>
+```
+
+### Step 2 — deploy
+
+```sh
+# SSH to the VPS, then:
 git clone git@github.com:Sepnexus/vape-chadha.git
 cd vape-chadha
 docker compose up --build -d
-
-# Health check
-curl http://localhost:8080/healthz   # → "ok"
 ```
 
-Put it behind nginx / Caddy / Cloudflare on port 80/443 and forward to `localhost:8080`. Example Caddy config:
-
-```
-vapeshack.example.com {
-  reverse_proxy localhost:8080
-}
-```
-
-### Updating the live site
+Once DNS resolves, Traefik fetches the cert on the first request (~15s). Then:
 
 ```sh
+curl -I https://vapeshacks.com/healthz   # → HTTP/2 200
+```
+
+Open `https://vapeshacks.com` in a browser.
+
+### Updating
+
+```sh
+cd vape-chadha
 git pull
 docker compose up --build -d
 ```
 
-The container has a `HEALTHCHECK` and `restart: unless-stopped`, so it self-heals on crash and on reboot.
+`--build` is required for HTML/CSS/JS changes — they're baked into the image. Traefik keeps routing during the brief container restart.
+
+### Rollback
+
+```sh
+cd vape-chadha
+docker compose down
+```
+
+Stops only the `vape-shack` container — Traefik, Postgres, n8n, webhook-buffer all keep running.
+
+### Troubleshooting
+
+**`network root_default not found`**
+The Traefik network is named differently on the host. Run `docker network ls` and edit `docker-compose.yml` to use the actual name.
+
+**Traefik returns 404**
+The container needs to be on the network Traefik watches:
+```sh
+docker inspect vape-shack --format '{{range $k,$v := .NetworkSettings.Networks}}{{$k}} {{end}}'
+# → root_default
+```
+
+**SSL cert never appears (`curl` cert error)**
+Traefik gets certs via TLS challenge from Let's Encrypt. Confirm the DNS:
+```sh
+dig vape.srv844822.hstgr.cloud +short
+```
+should return the VPS public IP. First-time issuance can take up to 60s.
 
 ## Editing content
 

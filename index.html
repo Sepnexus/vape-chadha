@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Vape Shack Victoria — Premium Devices. Curated Flavors.</title>
 <meta name="description" content="Vape Shack — 207 Menzies Street, Victoria BC. Premium devices, curated flavors. Open daily.">
-<link rel="canonical" href="https://vapeshack.ca/">
+<link rel="canonical" href="https://vapeshacks.com/">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -186,13 +186,18 @@
   .age-gate-card::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
   .age-gate-card::after { bottom: -1px; right: -1px; border-left: 0; border-top: 0; }
   .age-gate-logo {
+    margin-bottom: 32px;
+  }
+  .age-gate-logo-img { height: 60px; width: auto; display: inline-block; }
+  .age-gate-logo-text {
+    display: none;
     font-family: var(--display);
     font-size: 36px;
     letter-spacing: 0.04em;
     color: var(--gold);
     transform: skewX(-8deg);
-    margin-bottom: 32px;
   }
+  .age-gate-logo.no-logo-img .age-gate-logo-text { display: inline-block; }
   .age-gate h2 {
     font-family: var(--serif);
     font-style: italic;
@@ -238,17 +243,29 @@
     padding: 14px 48px;
   }
   .logo {
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    cursor: auto;
+  }
+  .logo-img {
+    height: 34px;
+    width: auto;
+    display: block;
+    transition: height 0.4s;
+  }
+  nav.top.scrolled .logo-img { height: 28px; }
+  .logo-lockup {
+    display: none;
+    align-items: center;
+    gap: 10px;
     font-family: var(--display);
     font-size: 26px;
     letter-spacing: 0.06em;
     color: var(--ink);
-    text-decoration: none;
-    display: flex;
-    align-items: center;
-    gap: 10px;
     transform: skewX(-8deg);
-    cursor: auto;
   }
+  .logo.no-logo-img .logo-lockup { display: flex; }
   .logo-mark {
     width: 32px;
     height: 32px;
@@ -332,6 +349,198 @@
     0%, 100% { box-shadow: 0 0 0 0 rgba(232,181,48,0.5); }
     50% { box-shadow: 0 0 0 6px rgba(232,181,48,0); }
   }
+
+  /* ============ Locations dropdown (desktop) ============ */
+  .has-dropdown { position: relative; }
+  .has-dropdown > a { display: inline-flex; align-items: center; }
+  .dropdown {
+    list-style: none;
+    position: absolute;
+    top: 100%;
+    left: -16px;
+    min-width: 240px;
+    margin-top: 10px;
+    padding: 8px;
+    background: rgba(10, 10, 10, 0.94);
+    backdrop-filter: blur(20px);
+    border: 1px solid var(--line);
+    box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-6px);
+    transition: opacity 0.25s ease, transform 0.25s ease, visibility 0.25s;
+    z-index: 90;
+  }
+  .dropdown::before {
+    content: "";
+    position: absolute;
+    top: -1px; left: 24px;
+    width: 12px; height: 12px;
+    background: rgba(10, 10, 10, 0.94);
+    border-left: 1px solid var(--line);
+    border-top: 1px solid var(--line);
+    transform: translateY(-50%) rotate(45deg);
+  }
+  .has-dropdown:hover .dropdown,
+  .has-dropdown:focus-within .dropdown {
+    opacity: 1; visibility: visible; transform: translateY(0);
+  }
+  .dropdown li { list-style: none; }
+  .dropdown a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding: 11px 14px;
+    font-family: var(--mono) !important;
+    font-size: 11px !important;
+    letter-spacing: 0.16em !important;
+    text-transform: uppercase;
+    color: var(--ink-dim) !important;
+    text-decoration: none;
+    border: 1px solid transparent;
+    transition: background 0.25s, color 0.25s, border-color 0.25s;
+  }
+  .dropdown a::after { display: none !important; }
+  .dropdown a:hover {
+    color: var(--ink) !important;
+    background: rgba(232, 181, 48, 0.06);
+    border-color: rgba(232, 181, 48, 0.2);
+  }
+  .dropdown a .dd-city { font-weight: 600; color: var(--ink); }
+  .dropdown a:hover .dd-city { color: var(--gold); }
+  .dropdown a .dd-region { font-size: 9px; color: var(--ink-mute); letter-spacing: 0.18em; }
+  .dropdown .dd-tag {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.18em;
+    padding: 2px 6px;
+    border: 1px solid var(--gold-deep);
+    color: var(--gold-deep);
+    border-radius: 2px;
+  }
+  .dropdown .dd-nearest .dd-tag { color: var(--gold); border-color: var(--gold); background: rgba(232,181,48,0.06); }
+  .dropdown .dd-soon { opacity: 0.7; }
+
+  /* ============ Mobile hamburger + drawer ============ */
+  .nav-burger {
+    display: none;
+    width: 38px; height: 38px;
+    background: transparent;
+    border: 1px solid rgba(245,241,232,0.12);
+    cursor: pointer;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    gap: 4px;
+    padding: 0;
+    transition: border-color 0.3s;
+  }
+  .nav-burger span {
+    width: 16px; height: 1.5px;
+    background: var(--ink);
+    transition: transform 0.3s, opacity 0.3s;
+    transform-origin: center;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(5.5px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { opacity: 0; }
+  .nav-burger.open span:nth-child(3) { transform: translateY(-5.5px) rotate(-45deg); }
+  .nav-burger:hover { border-color: var(--gold); }
+
+  .nav-drawer {
+    position: fixed;
+    top: 0; right: 0;
+    width: 100%;
+    max-width: 360px;
+    height: 100vh;
+    background: rgba(8, 8, 8, 0.98);
+    backdrop-filter: blur(24px);
+    border-left: 1px solid var(--line);
+    z-index: 95;
+    transform: translateX(100%);
+    transition: transform 0.45s cubic-bezier(0.7, 0, 0.3, 1);
+    overflow-y: auto;
+    display: none;
+  }
+  .nav-drawer.open { transform: translateX(0); }
+  .nav-drawer-inner { padding: 96px 28px 32px; display: flex; flex-direction: column; gap: 24px; min-height: 100%; }
+  .nav-drawer-list { list-style: none; display: flex; flex-direction: column; gap: 4px; padding: 0; }
+  .nav-drawer-list > li { list-style: none; }
+  .nav-drawer-list > li > a {
+    display: block;
+    padding: 14px 0;
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+    text-decoration: none;
+    border-bottom: 1px solid var(--line);
+    transition: color 0.3s, padding-left 0.3s;
+  }
+  .nav-drawer-list > li > a:hover { color: var(--gold); padding-left: 8px; }
+  .drawer-group-label {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+    padding: 14px 0 6px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 4px;
+  }
+  .nav-drawer-sub { list-style: none; padding: 6px 0 14px 18px; border-bottom: 1px solid var(--line); margin-bottom: 4px; }
+  .nav-drawer-sub li { list-style: none; }
+  .nav-drawer-sub a {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 9px 0;
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: color 0.3s, padding-left 0.3s;
+  }
+  .nav-drawer-sub a:hover { color: var(--gold); padding-left: 6px; }
+  .nav-drawer-sub .dd-nearest a { color: var(--gold); }
+  .nav-drawer-sub .dd-tag {
+    font-family: var(--mono);
+    font-size: 8px;
+    letter-spacing: 0.16em;
+    padding: 2px 6px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .nav-drawer-foot {
+    margin-top: auto;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+    padding-top: 24px;
+    border-top: 1px solid var(--line);
+  }
+  .nav-drawer-foot a {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+  }
+  .nav-drawer-foot a:hover { color: var(--gold); }
+
+  .nav-drawer-backdrop {
+    position: fixed; inset: 0; z-index: 90;
+    background: rgba(0,0,0,0.6);
+    opacity: 0; visibility: hidden;
+    transition: opacity 0.4s, visibility 0.4s;
+  }
+  .nav-drawer-backdrop.open { opacity: 1; visibility: visible; }
+  body.drawer-open { overflow: hidden; }
 
   /* ============ HERO (rebuilt) ============ */
   .hero {
@@ -883,16 +1092,18 @@
 
   /* ============ SECTIONS ============ */
   .section {
-    padding: 140px 0;
+    padding: 96px 0;
     position: relative;
   }
   .section-head {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    margin-bottom: 64px;
-    padding-bottom: 28px;
+    margin-bottom: 48px;
+    padding-bottom: 24px;
     border-bottom: 1px solid var(--line);
+    gap: 24px;
+    flex-wrap: wrap;
   }
   .section-head .left { max-width: 600px; }
   .section-head .h-display { margin-top: 14px; }
@@ -1069,33 +1280,37 @@
   .category:hover .category-bg { transform: scale(1.12); }
   .category-num {
     position: absolute;
-    top: 24px; right: 28px;
+    top: 20px; right: 24px;
     font-family: var(--display);
-    font-size: 36px;
+    font-size: 32px;
     color: var(--ink-mute);
     letter-spacing: 0.04em;
     transition: color 0.4s;
+    z-index: 3;
+    text-shadow: 0 2px 8px rgba(10,10,10,0.6);
   }
   .category:hover .category-num { color: var(--gold); }
   .category-shape {
     position: absolute;
-    top: 50%; left: 50%;
+    top: 46%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px; height: 140px;
-    background: linear-gradient(180deg, #1a1a1a 30%, var(--gold) 30%, var(--gold) 60%, #1a1a1a 60%);
-    border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(232,181,48,0.25);
+    width: 132px; height: 132px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     animation: floatY 8s ease-in-out infinite;
+  }
+  .category-shape svg {
+    width: 100%; height: 100%;
+    color: var(--gold);
+    filter: drop-shadow(0 14px 26px rgba(232,181,48,0.28));
   }
   @keyframes floatY {
     0%, 100% { transform: translate(-50%, -50%) translateY(0); }
     50% { transform: translate(-50%, -52%) translateY(-8px); }
   }
-  .category:hover .category-shape { transform: translate(-50%, -50%) rotate(-8deg) scale(1.08); animation-play-state: paused; }
-  .category-shape.pods { width: 90px; height: 110px; border-radius: 14px; background: linear-gradient(135deg, var(--gold), #1a1a1a); }
-  .category-shape.eliquids { width: 50px; height: 130px; border-radius: 8px 8px 4px 4px; background: linear-gradient(180deg, #1a1a1a 0 18%, var(--gold) 18% 88%, #1a1a1a 88%); }
-  .category-shape.access { width: 110px; height: 70px; border-radius: 10px; background: linear-gradient(180deg, #1a1a1a, #2a2a2a); border: 1px solid var(--gold); }
+  .category:hover .category-shape { transform: translate(-50%, -50%) rotate(-6deg) scale(1.1); animation-play-state: paused; }
   .category h4 {
     font-family: var(--serif);
     font-style: italic;
@@ -1131,7 +1346,7 @@
     background: var(--bg-2);
     border-top: 1px solid var(--line);
     border-bottom: 1px solid var(--line);
-    padding: 140px 0;
+    padding: 96px 0;
     position: relative;
     overflow: hidden;
   }
@@ -1183,6 +1398,23 @@
     line-height: 1.6;
   }
   .about-image-meta b { color: var(--gold); font-weight: 500; }
+  /* Real photo variant */
+  .about-image.has-photo { background: var(--bg-2); }
+  .about-image.has-photo::before {
+    content: "";
+    inset: 0; bottom: auto;
+    top: 0; right: 0;
+    height: 100%;
+    background: linear-gradient(180deg, transparent 55%, rgba(8,8,8,0.6));
+    z-index: 1;
+  }
+  .about-image.has-photo::after { content: none; }
+  .about-image.has-photo img {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: 0;
+  }
+  .about-image.has-photo .about-image-meta { z-index: 2; color: var(--ink); }
   .about-text p { color: var(--ink-dim); margin: 28px 0; font-size: 16px; max-width: 480px; }
   .about-stats {
     display: grid;
@@ -1195,7 +1427,7 @@
   .about-stats .stat .num { font-size: 48px; }
 
   /* Locations */
-  .locations { position: relative; padding: 140px 0; background: var(--bg); overflow: hidden; }
+  .locations { position: relative; padding: 96px 0; background: var(--bg); overflow: hidden; }
   .locations::before {
     content: "";
     position: absolute; inset: 0;
@@ -1218,6 +1450,55 @@
     overflow: hidden;
     background: var(--bg-2);
   }
+  /* Fallback layer behind iframe — shows if maps fails / before it loads */
+  .map-fallback {
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    width: 100%; height: 100%;
+    z-index: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    text-align: center;
+    padding: 32px;
+    background:
+      radial-gradient(circle at 50% 40%, rgba(232,181,48,0.10), transparent 60%),
+      repeating-linear-gradient(45deg, rgba(232,181,48,0.04), rgba(232,181,48,0.04) 1px, transparent 1px, transparent 18px),
+      var(--bg-2);
+  }
+  .map-fallback-pin {
+    width: 56px; height: 56px;
+    border: 1px solid var(--gold);
+    color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    position: relative;
+    background: rgba(10,10,10,0.6);
+    box-shadow: 0 0 40px rgba(232,181,48,0.25);
+    animation: pinPulse 2.2s ease-in-out infinite;
+  }
+  @keyframes pinPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(232,181,48,0.4); }
+    50% { box-shadow: 0 0 0 16px rgba(232,181,48,0); }
+  }
+  .map-fallback-pin svg { width: 24px; height: 24px; }
+  .map-fallback h4 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 28px;
+    color: var(--ink);
+  }
+  .map-fallback p {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-dim);
+    line-height: 1.5;
+  }
+  .map-wrap iframe { position: relative; z-index: 1; }
   .map-wrap::before, .map-wrap::after {
     content: "";
     position: absolute;
@@ -1230,10 +1511,11 @@
   .map-wrap iframe {
     width: 100%; height: 100%;
     border: 0;
-    filter: grayscale(0.85) contrast(1.05) invert(0.92) hue-rotate(180deg);
+    background: transparent;
+    filter: grayscale(0.4) contrast(0.95) brightness(0.95);
     transition: filter 0.6s;
   }
-  .map-wrap:hover iframe { filter: grayscale(0.5) contrast(1.05) invert(0.92) hue-rotate(180deg); }
+  .map-wrap:hover iframe { filter: grayscale(0) contrast(1) brightness(1); }
   .map-label {
     position: absolute;
     top: 20px; left: 20px;
@@ -1324,8 +1606,197 @@
   .location-cta { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 8px; }
   .location-cta .btn { padding: 14px 22px; font-size: 11px; }
 
+  /* Nearest-store banner */
+  .nearest-banner {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 18px;
+    margin: -16px 0 32px;
+    background: rgba(232, 181, 48, 0.06);
+    border: 1px solid rgba(232, 181, 48, 0.22);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-dim);
+    flex-wrap: wrap;
+  }
+  .nearest-banner strong { color: var(--gold); font-weight: 600; }
+  .nb-dot {
+    width: 8px; height: 8px;
+    background: var(--gold);
+    border-radius: 50%;
+    box-shadow: 0 0 12px var(--gold);
+    animation: blink 1.8s ease-in-out infinite;
+    flex-shrink: 0;
+  }
+  .nb-text { flex: 1; min-width: 200px; }
+  .nb-link { color: var(--gold) !important; text-decoration: none; }
+  .nb-link:hover { color: var(--gold-hot) !important; }
+
+  /* All locations grid */
+  .all-stores { margin-top: 80px; }
+  .all-stores-head {
+    text-align: center;
+    margin-bottom: 36px;
+  }
+  .all-stores-head h3 {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: clamp(28px, 4vw, 44px);
+    line-height: 1;
+    margin-top: 14px;
+  }
+  .all-stores-head h3 em { font-style: normal; color: var(--gold); font-weight: 400; }
+  .store-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 14px;
+  }
+  .store-card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 24px 22px;
+    background: var(--bg-2);
+    border: 1px solid var(--line);
+    text-decoration: none;
+    color: var(--ink);
+    transition: border-color 0.4s, transform 0.4s, background 0.4s;
+    overflow: hidden;
+    min-height: 200px;
+  }
+  .store-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -100%;
+    width: 100%; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold), transparent);
+    transition: left 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+  }
+  .store-card:hover { border-color: var(--gold); transform: translateY(-4px); background: #161616; }
+  .store-card:hover::before { left: 100%; }
+  .store-card.is-nearest {
+    border-color: rgba(232, 181, 48, 0.5);
+    background: linear-gradient(180deg, rgba(232, 181, 48, 0.05), transparent);
+  }
+  .store-card.is-soon { opacity: 0.7; }
+  .store-card-tag {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--gold);
+    border: 1px solid var(--gold);
+    padding: 3px 8px;
+  }
+  .store-card-tag.tag-soon { color: var(--ink-mute); border-color: var(--ink-mute); }
+  .store-card-city {
+    font-family: var(--serif);
+    font-style: italic;
+    font-weight: 300;
+    font-size: 30px;
+    line-height: 1;
+    color: var(--ink);
+    margin-top: auto;
+  }
+  .store-card.is-nearest .store-card-city { color: var(--gold); }
+  .store-card-brand {
+    font-family: var(--mono);
+    font-size: 9px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+  }
+  .store-card-addr {
+    font-size: 13px;
+    color: var(--ink-dim);
+    line-height: 1.45;
+  }
+  .store-card-arrow {
+    margin-top: 6px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    color: var(--gold);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: gap 0.3s;
+  }
+  .store-card:hover .store-card-arrow { gap: 14px; }
+
+  /* ============ Live open/closed status pill ============ */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-pill.is-open { color: #4ade80; }
+  .status-pill.is-open .status-dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: blink 2s ease-in-out infinite;
+  }
+  .status-pill.is-closed { color: var(--ink-mute); }
+  .status-pill.is-closed .status-dot { background: var(--ink-mute); }
+  .status-pill.is-soon { color: var(--gold); }
+  .status-pill.is-soon .status-dot {
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(232,181,48,0.55);
+  }
+  .status-detail {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  /* status pill used as the store-card corner tag */
+  .store-card .status-pill {
+    align-self: flex-start;
+    padding: 4px 9px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .store-card .status-pill.is-closed { border-color: var(--line); }
+
+  /* status row under the featured location card title */
+  .loc-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: -14px;
+  }
+  .loc-status .status-pill {
+    padding: 5px 11px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .loc-status .status-pill.is-closed { border-color: var(--line); }
+
+  /* hero tag dot reflects the nearest store's live status */
+  .hero-tag.st-open .dot { background: #4ade80; box-shadow: 0 0 12px #4ade80; }
+  .hero-tag.st-closed .dot { background: var(--ink-mute); box-shadow: none; animation: none; }
+
   /* Contact */
-  .contact-section { padding: 140px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
+  .contact-section { padding: 96px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
   .contact-section::before {
     content: "";
     position: absolute;
@@ -1339,13 +1810,20 @@
     pointer-events: none;
   }
   .contact-section .container { position: relative; z-index: 1; }
-  .contact-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 64px;
-    align-items: start;
+  .contact-intro {
+    color: var(--ink-dim);
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 560px;
+    margin-bottom: 36px;
   }
-  .contact-channels { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 32px; }
+  .contact-intro strong { color: var(--gold); font-weight: 600; }
+  .contact-channels {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+  .contact-channels.cc-2 { grid-template-columns: repeat(2, 1fr); }
   .channel {
     background: var(--bg);
     border: 1px solid var(--line);
@@ -1393,7 +1871,7 @@
     line-height: 1.2;
   }
   .channel.featured {
-    grid-column: span 2;
+    grid-column: 1 / -1;
     background: linear-gradient(135deg, rgba(232,181,48,0.12), rgba(232,181,48,0.02));
     border-color: rgba(232,181,48,0.4);
   }
@@ -1579,7 +2057,9 @@
     display: inline-block;
   }
   .footer-grid ul li a:hover { color: var(--gold); padding-left: 6px; }
-  .footer-brand .logo { font-size: 32px; margin-bottom: 20px; }
+  .footer-brand .logo { margin-bottom: 20px; }
+  .footer-brand .logo-lockup { font-size: 32px; }
+  .footer-brand .logo-img { height: 44px; }
   .footer-brand p { color: var(--ink-dim); font-size: 14px; max-width: 360px; line-height: 1.6; }
   .footer-bottom {
     display: flex;
@@ -1618,35 +2098,91 @@
   /* Responsive */
   @media (max-width: 980px) {
     .container { padding: 0 24px; }
-    nav.top { padding: 16px 24px; }
-    nav.top.scrolled { padding: 12px 24px; }
+    nav.top { padding: 14px 20px; }
+    nav.top.scrolled { padding: 10px 20px; }
     .nav-links { display: none; }
-    .hero-tag { left: 24px; }
+    .nav-icon { width: 38px; height: 38px; }
+    .nav-icon-contact { display: none; }
+    .nav-burger { display: flex; }
+    .nav-drawer { display: block; }
+    .logo-lockup { font-size: 22px; }
+    .logo-img { height: 28px; }
+    nav.top.scrolled .logo-img { height: 26px; }
+    .logo-mark { width: 28px; height: 28px; font-size: 16px; }
+    .hero-tag { left: 20px; top: 90px; }
     .hero-side { display: none; }
-    .hero-content { padding: 0 24px; }
-    .vape-stage { right: -120px; opacity: 0.35; transform: translateY(-50%) scale(0.7); }
-    .vape-numeral { font-size: 320px; }
-    .hero { height: auto; min-height: 100vh; padding-bottom: 60px; }
-    .hero-content { padding: 140px 24px 40px; height: auto; }
-    .hero-bottom { position: static; margin: 40px 24px 0; flex-direction: column; align-items: flex-start; gap: 32px; }
-    .hero-stats { gap: 32px; }
-    .products, .categories { grid-template-columns: 1fr; }
-    .categories { grid-template-columns: repeat(2, 1fr); }
-    .about-grid { grid-template-columns: 1fr; gap: 48px; }
-    .footer-grid { grid-template-columns: 1fr 1fr; }
-    .feature-callout { width: 200px; }
-    .marquee-item { font-size: 24px; gap: 50px; }
-    .marquee-track { gap: 50px; }
-    .review { width: 320px; }
-    .location-grid { grid-template-columns: 1fr; gap: 24px; }
-    .map-wrap { aspect-ratio: 4 / 3; }
-    .location-card { padding: 32px 24px; }
-    .location-card h3 { font-size: 32px; }
-    .contact-grid { grid-template-columns: 1fr; gap: 40px; }
-    .contact-channels { grid-template-columns: 1fr; }
+    .vape-stage { right: -160px; opacity: 0.22; transform: translateY(-50%) scale(0.6); }
+    .vape-numeral { font-size: 280px; opacity: 0.5; }
+    .hero { height: auto; min-height: 100vh; padding-bottom: 40px; }
+    .hero-content { padding: 130px 20px 24px; height: auto; }
+    .hero-headline-wrap { max-width: 100%; }
+    .hero h1 { font-size: clamp(40px, 11vw, 64px) !important; }
+    .hero-bottom { position: static; margin: 28px 20px 0; flex-direction: column; align-items: flex-start; gap: 24px; left: auto; right: auto; bottom: auto; }
+    .hero-bottom-left p { font-size: 14px; }
+    .hero-cta { width: 100%; }
+    .hero-cta .btn { flex: 1; justify-content: center; }
+    .hero-stats { gap: 20px; flex-wrap: wrap; }
+    .stat .num { font-size: 32px; }
+    .section { padding: 64px 0; }
+    .section-head { margin-bottom: 32px; padding-bottom: 20px; align-items: flex-start; }
+    .h-display { font-size: clamp(32px, 8vw, 48px); }
+    .about { padding: 64px 0; }
+    .categories { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+    .category { padding: 22px 18px; }
+    .category h4 { font-size: 20px; }
+    .category-num { font-size: 26px; top: 14px; right: 16px; }
+    .category-shape { width: 104px; height: 104px; }
+    .about-grid { grid-template-columns: 1fr; gap: 32px; }
+    .about-image { aspect-ratio: 4/3; }
+    .about-image::after { font-size: 140px; }
+    .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; margin-bottom: 40px; }
+    .footer-bottom { flex-direction: column; gap: 12px; align-items: flex-start; }
+    footer { padding: 56px 0 28px; }
+    .marquee-item { font-size: 22px; gap: 40px; }
+    .marquee-track { gap: 40px; }
+    .marquee { padding: 20px 0; }
+    .review { width: 280px; padding: 28px 22px; }
+    .review-quote { font-size: 17px; }
+    .locations { padding: 64px 0; }
+    .location-grid { grid-template-columns: 1fr; gap: 16px; }
+    .map-wrap { aspect-ratio: 1 / 1; }
+    .location-card { padding: 28px 22px; gap: 22px; }
+    .location-card h3 { font-size: 30px; }
+    .location-row .ico { width: 32px; height: 32px; }
+    .location-row .ico svg { width: 14px; height: 14px; }
+    .location-cta { flex-direction: column; align-items: stretch; }
+    .location-cta .btn { width: 100%; justify-content: center; }
+    .nearest-banner { font-size: 10px; padding: 10px 14px; gap: 10px; }
+    .all-stores { margin-top: 56px; }
+    .store-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .store-card { padding: 18px 16px; min-height: 170px; }
+    .store-card-city { font-size: 22px; }
+    .contact-section { padding: 64px 0; }
+    .contact-grid { grid-template-columns: 1fr; gap: 32px; }
+    .contact-channels { grid-template-columns: 1fr; gap: 8px; margin-top: 24px; }
+    .channel { padding: 18px 20px; }
     .channel.featured { grid-column: span 1; }
-    .channel.featured .ch-val { font-size: 22px; }
-    .contact-form { padding: 28px 24px; }
+    .channel.featured .ch-val { font-size: 20px; }
+    .channel .ch-val { font-size: 17px; }
+    .contact-form { padding: 28px 22px; }
+    .contact-form h4 { font-size: 24px; }
+    .cta-banner { padding: 72px 0; }
+    .cta-banner .h-display { font-size: clamp(40px, 10vw, 64px); }
+    .btn { padding: 14px 22px; font-size: 11px; }
+  }
+
+  @media (max-width: 480px) {
+    .container { padding: 0 18px; }
+    .hero-tag { left: 18px; }
+    .hero-content { padding: 120px 18px 16px; }
+    .hero h1 { font-size: clamp(36px, 11vw, 56px) !important; }
+    .hero h1 .display-line { font-size: 0.36em; margin-top: 12px; }
+    .hero-bottom { margin: 24px 18px 0; }
+    .category { aspect-ratio: 4 / 5; }
+    .category h4 { font-size: 17px; }
+    .category-shape { width: 92px; height: 92px; }
+    .footer-grid { grid-template-columns: 1fr; gap: 28px; }
+    .channel.featured .ch-val { font-size: 18px; }
   }
 </style>
 </head>
@@ -1658,11 +2194,14 @@
 <!-- AGE GATE -->
 <div class="age-gate" id="ageGate">
   <div class="age-gate-card">
-    <div class="age-gate-logo">VAPE SHACK</div>
-    <h2>Are you 21 or older?</h2>
-    <p>This site contains products intended for adults of legal smoking age. By entering, you confirm you meet the legal age requirement in your jurisdiction.</p>
+    <div class="age-gate-logo">
+      <img src="assets/logo.png" alt="Vape Shack" class="age-gate-logo-img" onerror="this.closest('.age-gate-logo').classList.add('no-logo-img');this.remove();">
+      <span class="age-gate-logo-text">VAPE SHACK</span>
+    </div>
+    <h2>Are you 19 or older?</h2>
+    <p>This site contains products intended for adults of legal smoking age. By entering, you confirm you are 19+ — the legal age in British Columbia.</p>
     <div class="age-gate-actions">
-      <button class="btn" onclick="enterSite()">Yes, I am 21+</button>
+      <button class="btn" onclick="enterSite()">Yes, I am 19+</button>
       <a class="btn btn-ghost" href="https://www.google.com">Exit</a>
     </div>
     <small>Nicotine is an addictive chemical</small>
@@ -1671,28 +2210,62 @@
 
 <!-- NAV -->
 <nav class="top" id="topNav">
-  <a href="#top" class="logo">
-    <span class="logo-mark">V</span>
-    <span>VAPE</span><span class="shack">SHACK</span>
+  <a href="/" class="logo">
+    <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
+    <span class="logo-lockup">
+      <span class="logo-mark">V</span>
+      <span>VAPE</span><span class="shack">SHACK</span>
+    </span>
   </a>
   <ul class="nav-links">
-    <li><a href="#top" class="nav-anchor active" data-target="top">Home</a></li>
+    <li><a href="/" class="nav-anchor active" data-target="top">Home</a></li>
     <li><a href="#about" class="nav-anchor" data-target="about">About</a></li>
-    <li><a href="#locations" class="nav-anchor" data-target="locations">Locations</a></li>
+    <li class="has-dropdown">
+      <a href="#locations" class="nav-anchor" data-target="locations">
+        Locations
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" style="margin-left:6px;vertical-align:middle"><path d="M2 4l3 3 3-3"/></svg>
+      </a>
+      <ul class="dropdown" id="locationsDropdown">
+        <!-- populated by JS from STORES -->
+      </ul>
+    </li>
     <li><a href="#contact" class="nav-anchor" data-target="contact">Contact</a></li>
   </ul>
   <div class="nav-actions">
-    <a href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener" class="nav-icon" aria-label="Instagram">
+    <a id="navInsta" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener" class="nav-icon" aria-label="Instagram">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="2" y="2" width="12" height="12" rx="3"/><circle cx="8" cy="8" r="2.6"/><circle cx="11.6" cy="4.4" r="0.6" fill="currentColor" stroke="none"/></svg>
     </a>
-    <a href="https://wa.me/17789310879" target="_blank" rel="noopener" class="nav-icon" aria-label="WhatsApp">
+    <a id="navWa" href="https://wa.me/17789310879" target="_blank" rel="noopener" class="nav-icon" aria-label="WhatsApp">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4"><path d="M2.5 13.5l1-3A6 6 0 1 1 5.5 13l-3 0.5z"/><path d="M6 6c0.2 1.5 2 3.3 3.5 3.6l0.9-0.9 1.6 0.8c-0.2 1-1.3 1.7-2.5 1.4C7.6 10.5 5.6 8.6 5 6.7 4.7 5.5 5.4 4.4 6.4 4.2L7.2 5.8 6 6z" stroke-linejoin="round"/></svg>
     </a>
-    <a href="#contact" class="nav-icon" aria-label="Contact">
+    <a href="#contact" class="nav-icon nav-icon-contact" aria-label="Contact">
       <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M2 4h12v8H2z"/><path d="M2 4l6 5 6-5"/></svg>
     </a>
+    <button class="nav-burger" id="navBurger" aria-label="Menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
   </div>
 </nav>
+
+<!-- MOBILE DRAWER -->
+<div class="nav-drawer" id="navDrawer" aria-hidden="true">
+  <div class="nav-drawer-inner">
+    <ul class="nav-drawer-list">
+      <li><a href="/" data-drawer-close>Home</a></li>
+      <li><a href="#about" data-drawer-close>About</a></li>
+      <li>
+        <div class="drawer-group-label">Locations</div>
+        <ul class="nav-drawer-sub" id="drawerLocations"><!-- populated by JS --></ul>
+      </li>
+      <li><a href="#contact" data-drawer-close>Contact</a></li>
+    </ul>
+    <div class="nav-drawer-foot">
+      <a href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram</a>
+      <a href="https://wa.me/17789310879" target="_blank" rel="noopener">WhatsApp</a>
+      <a href="tel:+17789310879">Call us</a>
+    </div>
+  </div>
+</div>
 
 <!-- HERO -->
 <section class="hero">
@@ -1701,15 +2274,15 @@
   <div class="hero-stripe s1"></div>
   <div class="hero-stripe s2"></div>
 
-  <div class="hero-tag">
-    <span class="dot"></span>
-    <span class="text">Open Today · 8am – 11pm</span>
+  <div class="hero-tag" id="heroTag">
+    <span class="dot" id="heroTagDot"></span>
+    <span class="text" id="heroTagText">Vape Shack · Victoria, BC</span>
   </div>
 
   <div class="hero-side">
-    <span>Vape Shack</span>
+    <span id="heroSideBrand">Vape Shack</span>
     <span>Est. 2022</span>
-    <span>Victoria, BC</span>
+    <span id="heroSideCity">Victoria, BC</span>
   </div>
 
   <div class="vape-stage" id="vapeStage">
@@ -1737,13 +2310,13 @@
 
   <div class="hero-content">
     <div class="hero-headline-wrap">
-      <span class="eyebrow reveal">Vape Shack · Victoria, BC</span>
+      <span class="eyebrow reveal" id="heroEyebrow">Vape Shack · Victoria, BC</span>
       <h1 class="word-reveal" id="heroHeadline">
         <span class="w"><span>Premium</span></span>
         <span class="w"><span>devices.</span></span><br>
         <span class="w"><span class="ital">Curated</span></span>
         <span class="w"><span>flavors.</span></span>
-        <span class="display-line">— 207 Menzies Street · Open daily</span>
+        <span class="display-line" id="heroDisplayLine">— 207 Menzies Street · Victoria</span>
       </h1>
     </div>
   </div>
@@ -1759,8 +2332,8 @@
       </div>
     </div>
     <div class="hero-stats reveal-stagger">
-      <div class="stat"><div class="num" data-count="1">0</div><div class="label">Victoria Location</div></div>
-      <div class="stat"><div class="num" data-count="15" data-suffix="h">0</div><div class="label">Open Daily</div></div>
+      <div class="stat"><div class="num" data-count="5">0</div><div class="label">BC Locations</div></div>
+      <div class="stat"><div class="num" data-count="7" data-suffix="d">0</div><div class="label">Open Weekly</div></div>
       <div class="stat"><div class="num" data-count="4.9" data-decimal="1">0</div><div class="label">Avg. Rating</div></div>
     </div>
   </div>
@@ -1792,7 +2365,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">01</div>
-        <div class="category-shape pods"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="35" y="34" width="30" height="55" rx="9"/>
+            <rect x="42" y="13" width="16" height="23" rx="5"/>
+            <path d="M50 13 V8"/>
+            <rect x="42" y="45" width="16" height="17" rx="2.5" stroke-width="2.2"/>
+            <path d="M44 71 h12" stroke-width="2.4"/>
+          </svg>
+        </div>
         <h4>Pod Systems</h4>
         <small>Refillable &amp; disposable</small>
         <span class="category-arrow">→</span>
@@ -1800,7 +2381,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">02</div>
-        <div class="category-shape"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="27" y="44" width="46" height="45" rx="7"/>
+            <circle cx="40" cy="58" r="7"/>
+            <rect x="52" y="70" width="15" height="11" rx="2" stroke-width="2.2"/>
+            <rect x="41" y="20" width="18" height="25" rx="3"/>
+            <path d="M46 20 q4 -8 8 0"/>
+          </svg>
+        </div>
         <h4>Mods</h4>
         <small>Variable wattage &amp; mech</small>
         <span class="category-arrow">→</span>
@@ -1808,7 +2397,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">03</div>
-        <div class="category-shape eliquids"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M37 42 q0 -4 4 -4 h18 q4 0 4 4 v40 q0 6 -6 6 H43 q-6 0 -6 -6 Z"/>
+            <rect x="44" y="29" width="12" height="11"/>
+            <rect x="39" y="13" width="22" height="17" rx="3"/>
+            <path d="M44 58 h12" stroke-width="2.2"/>
+            <path d="M44 68 h12" stroke-width="2.2"/>
+          </svg>
+        </div>
         <h4>E-Liquids</h4>
         <small>Freebase &amp; salt nic</small>
         <span class="category-arrow">→</span>
@@ -1816,7 +2413,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">04</div>
-        <div class="category-shape access"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="32" y="40" width="36" height="32" rx="4"/>
+            <rect x="44" y="30" width="12" height="10"/>
+            <path d="M50 30 V22"/>
+            <path d="M32 48 h36 M32 56 h36 M32 64 h36" stroke-width="2.2"/>
+            <path d="M44 72 v8 M56 72 v8"/>
+          </svg>
+        </div>
         <h4>Accessories</h4>
         <small>Coils, tanks &amp; more</small>
         <span class="category-arrow">→</span>
@@ -1838,20 +2443,22 @@
   <div class="container">
     <div class="about-grid">
       <div class="about-image-wrap" id="aboutImageWrap">
-        <div class="about-image">
+        <div class="about-image has-photo">
+          <img src="assets/photos/victoria.jpg" alt="Vape Shack Victoria storefront on Menzies Street" loading="lazy"
+               onerror="this.closest('.about-image').classList.remove('has-photo');this.remove();">
           <div class="about-image-meta">EST. <b>2022</b><br>VICTORIA, BC</div>
         </div>
       </div>
       <div class="about-text">
-        <span class="eyebrow reveal">Est. 2022 · Victoria, BC</span>
+        <span class="eyebrow reveal">Est. 2022 · British Columbia</span>
         <div class="h-display reveal">A shack with <em>standards</em>.</div>
-        <p class="reveal">Vape Shack opened on Menzies Street with a simple idea — give Victoria a vape shop where the staff actually use the products, the wall is curated instead of crowded, and questions get real answers.</p>
-        <p class="reveal">We're a small, independent store. Every device, pod, and bottle on the shelf earns its spot. Drop in, tell us what you're looking for, and we'll point you to something honest.</p>
-        <a href="#locations" class="btn btn-ghost reveal">Visit the store
+        <p class="reveal">Vape Shack started on Menzies Street in Victoria with a simple idea — a vape shop where the staff actually use the products, the wall is curated instead of crowded, and questions get real answers.</p>
+        <p class="reveal">That idea grew into a small network of independent shops across BC — Victoria, Osoyoos, Princeton, Peachland, with Sidney on the way. Every device, pod, and bottle on the shelf still earns its spot.</p>
+        <a href="#locations" class="btn btn-ghost reveal">See all locations
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
         </a>
         <div class="about-stats reveal-stagger">
-          <div class="stat"><div class="num" data-count="1">0</div><div class="label">Local store</div></div>
+          <div class="stat"><div class="num" data-count="5">0</div><div class="label">BC locations</div></div>
           <div class="stat"><div class="num" data-count="200" data-suffix="+">0</div><div class="label">Curated SKUs</div></div>
           <div class="stat"><div class="num" data-count="7" data-suffix="d">0</div><div class="label">Open weekly</div></div>
         </div>
@@ -1865,33 +2472,48 @@
   <div class="container">
     <div class="section-head">
       <div class="left">
-        <span class="eyebrow reveal">Find us</span>
+        <span class="eyebrow reveal" id="locEyebrow">Find us</span>
         <div class="h-display reveal">Visit the <em>shack</em>.</div>
       </div>
-      <a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener" class="reveal">Get directions
+      <a href="#" id="locDirectionsTop" target="_blank" rel="noopener" class="reveal">Get directions
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
       </a>
     </div>
 
+    <div class="nearest-banner reveal" id="nearestBanner" hidden>
+      <span class="nb-dot"></span>
+      <span class="nb-text">Showing your nearest store · <strong id="nbCity">Victoria</strong></span>
+      <a href="#allStores" class="nb-link">Not you? Pick another →</a>
+    </div>
+
     <div class="location-grid">
       <div class="map-wrap reveal">
-        <span class="map-label">◉ Vape Shack · Victoria</span>
+        <span class="map-label" id="locMapLabel">◉ Vape Shack · Victoria</span>
+        <div class="map-fallback" aria-hidden="true">
+          <div class="map-fallback-pin">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 22s8-7.5 8-14a8 8 0 1 0-16 0c0 6.5 8 14 8 14z"/><circle cx="12" cy="8" r="3"/></svg>
+          </div>
+          <h4 id="locFallbackName">Vape Shack Victoria</h4>
+          <p id="locFallbackAddr">207 Menzies Street<br>Victoria, BC V8V 2G6</p>
+        </div>
         <iframe
+          id="locMapIframe"
           loading="lazy"
           referrerpolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps?q=207%20Menzies%20Street%2C%20Victoria%2C%20BC%20V8V%202G7&output=embed"
-          title="Map to Vape Shack, 207 Menzies Street, Victoria BC"
+          src="https://www.google.com/maps?q=207%20Menzies%20Street%2C%20Victoria%2C%20BC%20V8V%202G6&output=embed"
+          title="Map to Vape Shack"
           allowfullscreen></iframe>
       </div>
 
       <div class="location-card reveal">
-        <h3>Vape Shack <em>Victoria</em></h3>
+        <h3 id="locCardTitle">Vape Shack <em>Victoria</em></h3>
+        <div class="loc-status" id="locStatus"></div>
 
         <div class="location-row">
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14s5-5 5-9a5 5 0 0 0-10 0c0 4 5 9 5 9z"/><circle cx="8" cy="5" r="2"/></svg></div>
           <div class="meta">
             <div class="lbl">Address</div>
-            <div class="val"><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">207 Menzies Street<br>Victoria, BC V8V 2G7</a></div>
+            <div class="val"><a id="locAddressLink" href="#" target="_blank" rel="noopener" id="locAddressLine">207 Menzies Street<br>Victoria, BC V8V 2G6</a></div>
           </div>
         </div>
 
@@ -1899,15 +2521,7 @@
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="8" cy="8" r="6"/><path d="M8 4v4l3 2"/></svg></div>
           <div class="meta">
             <div class="lbl">Hours</div>
-            <div class="hours-list" id="hoursList">
-              <div class="hours-row" data-day="0"><span class="day">Sunday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="1"><span class="day">Monday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="2"><span class="day">Tuesday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="3"><span class="day">Wednesday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="4"><span class="day">Thursday</span><span>8:00 AM – 11:00 PM</span></div>
-              <div class="hours-row" data-day="5"><span class="day">Friday</span><span>8:00 AM – 12:00 AM</span></div>
-              <div class="hours-row" data-day="6"><span class="day">Saturday</span><span>8:00 AM – 12:00 AM</span></div>
-            </div>
+            <div class="hours-list" id="hoursList"></div>
           </div>
         </div>
 
@@ -1915,17 +2529,27 @@
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 3h3l1.5 4-2 1c1 2 2.5 3.5 4.5 4.5l1-2 4 1.5v3a1 1 0 0 1-1 1A11 11 0 0 1 2 4a1 1 0 0 1 1-1z"/></svg></div>
           <div class="meta">
             <div class="lbl">Phone</div>
-            <div class="val"><a href="tel:+17789310879">+1 (778) 931-0879</a></div>
+            <div class="val"><a id="locPhoneLink" href="tel:+17789310879">+1 (778) 931-0879</a></div>
           </div>
         </div>
 
         <div class="location-cta">
-          <a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener" class="btn">Get Directions
+          <a id="locDirectionsBtn" href="#" target="_blank" rel="noopener" class="btn">Get Directions
             <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
           </a>
-          <a href="https://wa.me/17789310879?text=Hi%20Vape%20Shack%2C" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp Us</a>
+          <a id="locWhatsappBtn" href="#" target="_blank" rel="noopener" class="btn btn-ghost">WhatsApp Us</a>
+          <a id="locStorePage" href="#" class="btn btn-ghost">View Store →</a>
         </div>
       </div>
+    </div>
+
+    <!-- All locations grid -->
+    <div class="all-stores reveal" id="allStores">
+      <div class="all-stores-head">
+        <span class="eyebrow">All locations</span>
+        <h3>5 stores across <em>British Columbia</em></h3>
+      </div>
+      <div class="store-grid" id="storeGrid"><!-- populated by JS --></div>
     </div>
   </div>
 </section>
@@ -2009,61 +2633,11 @@
       </div>
     </div>
 
-    <div class="contact-grid">
-      <div class="contact-channels-wrap reveal">
-        <p style="color: var(--ink-dim); font-size: 15px; max-width: 480px; line-height: 1.6;">Got a product question, looking for something specific, or just want to know if we're open? Reach out — we usually reply within the hour during shop hours.</p>
+    <p class="contact-intro reveal" id="contactIntro">Questions, stock checks, or just want to know if we're open? Reach the
+      <strong id="contactStoreName">Victoria</strong> store directly — tap any option below.</p>
 
-        <div class="contact-channels">
-          <a class="channel featured" href="https://wa.me/17789310879?text=Hi%20Vape%20Shack%2C" target="_blank" rel="noopener">
-            <div class="ch-ico">
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-0.3-0.1-1.7-0.8-2-0.9-0.3-0.1-0.5-0.1-0.7 0.1-0.2 0.3-0.8 0.9-1 1.1-0.2 0.2-0.4 0.2-0.7 0.1-0.3-0.1-1.3-0.5-2.4-1.5-0.9-0.8-1.5-1.8-1.7-2.1-0.2-0.3 0-0.5 0.1-0.6 0.1-0.1 0.3-0.4 0.4-0.5 0.1-0.2 0.2-0.3 0.3-0.5 0.1-0.2 0-0.4 0-0.5-0.1-0.1-0.7-1.6-0.9-2.2-0.2-0.6-0.5-0.5-0.7-0.5h-0.6c-0.2 0-0.5 0.1-0.8 0.4-0.3 0.3-1 1-1 2.5 0 1.4 1.1 2.8 1.2 3 0.1 0.2 2.1 3.2 5 4.4 0.7 0.3 1.3 0.5 1.7 0.6 0.7 0.2 1.4 0.2 1.9 0.1 0.6-0.1 1.7-0.7 2-1.4 0.3-0.7 0.3-1.3 0.2-1.4-0.1-0.1-0.3-0.2-0.6-0.3zM12 2C6.5 2 2 6.5 2 12c0 1.8 0.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4 0.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.5 0-3-0.4-4.3-1.2l-0.3-0.2-3.1 0.8 0.8-3.1-0.2-0.3C4.1 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.3-8.3 8.3z"/></svg>
-            </div>
-            <div class="ch-lbl">WhatsApp · Fastest</div>
-            <div class="ch-val">+1 (778) 931-0879</div>
-          </a>
-          <a class="channel" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">
-            <div class="ch-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>
-            </div>
-            <div class="ch-lbl">Instagram · DMs open</div>
-            <div class="ch-val">@vapeshack.victoria</div>
-          </a>
-          <a class="channel" href="tel:+17789310879">
-            <div class="ch-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-3 1.5c1 2 3 4 5 5L14.5 12l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg>
-            </div>
-            <div class="ch-lbl">Phone</div>
-            <div class="ch-val">+1 (778) 931-0879</div>
-          </a>
-          <a class="channel" href="mailto:hello@vapeshack.co">
-            <div class="ch-ico">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 6l9 7 9-7"/></svg>
-            </div>
-            <div class="ch-lbl">Email</div>
-            <div class="ch-val">hello@vapeshack.co</div>
-          </a>
-        </div>
-      </div>
-
-      <form class="contact-form reveal" id="contactForm" novalidate>
-        <h4>Send a message</h4>
-        <p class="sub">We'll get back same day</p>
-        <div class="field">
-          <label for="cf-name">Your name</label>
-          <input id="cf-name" name="name" type="text" autocomplete="name" required>
-        </div>
-        <div class="field">
-          <label for="cf-email">Email</label>
-          <input id="cf-email" name="email" type="email" autocomplete="email" required>
-        </div>
-        <div class="field">
-          <label for="cf-msg">Message</label>
-          <textarea id="cf-msg" name="message" rows="4" required></textarea>
-        </div>
-        <button type="submit" class="btn form-btn">Send Message
-          <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
-        </button>
-      </form>
+    <div class="contact-channels reveal" id="contactChannels">
+      <!-- populated by JS with the highlighted (nearest) store's contact info -->
     </div>
   </div>
 </section>
@@ -2085,37 +2659,41 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#top" class="logo">
-          <span class="logo-mark">V</span>
-          <span>VAPE</span><span class="shack">SHACK</span>
+        <a href="/" class="logo">
+          <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
+          <span class="logo-lockup">
+            <span class="logo-mark">V</span>
+            <span>VAPE</span><span class="shack">SHACK</span>
+          </span>
         </a>
         <p>Independent vape shop on Menzies Street, Victoria BC. Curated devices, honest advice, late hours. Walk in.</p>
       </div>
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><a href="#top">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#locations">Locations</a></li>
           <li><a href="#contact">Contact</a></li>
         </ul>
       </div>
       <div>
-        <h5>Visit</h5>
+        <h5>Locations</h5>
         <ul>
-          <li><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">207 Menzies Street<br>Victoria, BC V8V 2G7</a></li>
-          <li><a href="https://maps.app.goo.gl/HVYNX5N6TFkRgdw97" target="_blank" rel="noopener">Get directions →</a></li>
-          <li><a href="#locations">Sun–Thu · 8am–11pm</a></li>
-          <li><a href="#locations">Fri–Sat · 8am–12am</a></li>
+          <li><a href="/victoria">Victoria · 207 Menzies St</a></li>
+          <li><a href="/osoyoos">Osoyoos · 8141 Main St</a></li>
+          <li><a href="/princeton">Princeton · 133 Vermilion Ave</a></li>
+          <li><a href="/peachland">Peachland · 5500 Clement Cr</a></li>
+          <li><a href="/sidney">Sidney · 2310 Beacon Ave · Soon</a></li>
         </ul>
       </div>
       <div>
         <h5>Reach us</h5>
         <ul>
-          <li><a href="https://wa.me/17789310879" target="_blank" rel="noopener">WhatsApp · (778) 931-0879</a></li>
-          <li><a href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram · @vapeshack.victoria</a></li>
-          <li><a href="tel:+17789310879">Phone · +1 (778) 931-0879</a></li>
-          <li><a href="mailto:hello@vapeshack.co">hello@vapeshack.co</a></li>
+          <li><a id="footWa" href="https://wa.me/17789310879" target="_blank" rel="noopener">WhatsApp · (778) 931-0879</a></li>
+          <li id="footInstaLi"><a id="footInsta" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram · @vapeshack.victoria</a></li>
+          <li><a id="footPhone" href="tel:+17789310879">Phone · +1 (778) 931-0879</a></li>
+          <li><a id="footEmail" href="mailto:hello@vapeshacks.com">hello@vapeshacks.com</a></li>
         </ul>
       </div>
     </div>
@@ -2126,6 +2704,7 @@
   </div>
 </footer>
 
+<script src="assets/stores.js?v=20260516d"></script>
 <script>
   // ============ AGE GATE ============
   function enterSite() {
@@ -2223,42 +2802,83 @@
   window.addEventListener('resize', onScroll);
   onScroll();
 
-  // ============ Reveal observer ============
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.classList.add('in');
-      }
-    });
-  }, { threshold: 0.12, rootMargin: '0px 0px -50px 0px' });
+  // ============ Reveal on scroll (rAF-based, robust) ============
+  // Why not IntersectionObserver: it's unreliable on instant programmatic
+  // scrolls and in some embedded/preview contexts. A simple rAF check
+  // every scroll/resize covers all cases.
+  (function () {
+    const els = Array.from(document.querySelectorAll('.reveal, .reveal-stagger, .word-reveal'));
+    let pending = els.slice();
+    let ticking = false;
 
-  document.querySelectorAll('.reveal, .reveal-stagger, .word-reveal').forEach(el => revealObserver.observe(el));
+    function check() {
+      ticking = false;
+      const vh = window.innerHeight;
+      const trigger = vh - 60; // reveal once top crosses 60px from bottom of viewport
+      pending = pending.filter(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < trigger && r.bottom > 0) {
+          el.classList.add('in');
+          return false;
+        }
+        return true;
+      });
+    }
+    function request() {
+      if (!ticking) { ticking = true; requestAnimationFrame(check); }
+    }
+
+    // Initial: reveal anything already visible
+    check();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+
+    // Hard safety: after 3s, force-reveal anything still left
+    // (guarantees content is never permanently hidden, even if our hook fails)
+    setTimeout(() => { pending.forEach(el => el.classList.add('in')); pending = []; }, 3000);
+  })();
 
   // ============ Counter animation ============
   function animateCount(el) {
+    if (el._counted) return;
+    el._counted = true;
     const target = parseFloat(el.dataset.count);
     const decimal = parseInt(el.dataset.decimal || '0');
     const suffix = el.dataset.suffix || '';
+    const finalText = (isNaN(target) ? 0 : target).toFixed(decimal) + suffix;
     const duration = 1800;
     const start = performance.now();
     function tick(now) {
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
-      const v = (target * eased).toFixed(decimal);
-      el.textContent = v + suffix;
+      el.textContent = (target * eased).toFixed(decimal) + suffix;
       if (t < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+    // Guarantee the final value even if rAF is throttled (background tab)
+    setTimeout(() => { el.textContent = finalText; }, duration + 250);
   }
-  const countObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        animateCount(e.target);
-        countObserver.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+  // Trigger each counter when it scrolls into view — scroll/rAF based
+  // (more reliable than IntersectionObserver across environments),
+  // with a hard safety timer so a counter never stays stuck at 0.
+  (function () {
+    let pending = Array.from(document.querySelectorAll('[data-count]'));
+    let ticking = false;
+    function check() {
+      ticking = false;
+      const vh = window.innerHeight;
+      pending = pending.filter(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) { animateCount(el); return false; }
+        return true;
+      });
+    }
+    function request() { if (!ticking) { ticking = true; requestAnimationFrame(check); } }
+    check();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+    setTimeout(() => { pending.forEach(animateCount); pending = []; }, 3000);
+  })();
 
   // ============ Trigger hero word reveal on load ============
   setTimeout(() => {
@@ -2266,21 +2886,293 @@
     document.querySelectorAll('.hero .reveal, .hero .reveal-stagger').forEach(el => el.classList.add('in'));
   }, 200);
 
-  // ============ Highlight today's hours ============
+  // ============ STORES: dropdown, drawer, locations, IP detect ============
   (function () {
-    const today = new Date().getDay();
-    const row = document.querySelector('.hours-row[data-day="' + today + '"]');
-    if (row) row.classList.add('is-today');
+    if (!window.STORES) return;
+    const stores = window.STORES;
+    const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+
+    // -- Populate nav dropdown --
+    const dd = document.getElementById('locationsDropdown');
+    if (dd) {
+      dd.innerHTML = stores.map(s => `
+        <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
+          <a href="/${s.id}">
+            <span>
+              <span class="dd-city">${escapeHtml(s.city)}</span>
+              <span class="dd-region">· ${escapeHtml(s.region)}</span>
+            </span>
+            ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
+          </a>
+        </li>
+      `).join('');
+    }
+
+    // -- Populate mobile drawer locations --
+    const drawer = document.getElementById('drawerLocations');
+    if (drawer) {
+      drawer.innerHTML = stores.map(s => `
+        <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
+          <a href="/${s.id}">
+            <span>${escapeHtml(s.city)}</span>
+            ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
+          </a>
+        </li>
+      `).join('');
+    }
+
+    // -- Populate "all locations" grid --
+    // Live open/closed status pill markup for a store
+    function statusPillHTML(s) {
+      const st = window.getStoreStatus(s);
+      return `<span class="status-pill is-${st.state}"><span class="status-dot"></span>${st.label}</span>`;
+    }
+
+    const grid = document.getElementById('storeGrid');
+    if (grid) {
+      grid.innerHTML = stores.map(s => `
+        <a href="/${s.id}" class="store-card ${s.status === 'coming-soon' ? 'is-soon' : ''}" data-store-id="${s.id}">
+          ${statusPillHTML(s)}
+          <div>
+            <div class="store-card-brand">${escapeHtml(s.brand)}</div>
+            <div class="store-card-city">${escapeHtml(s.city)}</div>
+          </div>
+          <div class="store-card-addr">${escapeHtml(s.addressLine)}<br>${escapeHtml(s.city)}, ${escapeHtml(s.region)}</div>
+          <span class="store-card-arrow">View store →</span>
+        </a>
+      `).join('');
+    }
+
+    // -- Render featured (nearest) store --
+    function renderHours(store, container) {
+      if (!container) return;
+      const today = new Date().getDay();
+      container.innerHTML = store.hours.map((row, i) => `
+        <div class="hours-row ${i === today ? 'is-today' : ''}" data-day="${i}">
+          <span class="day">${escapeHtml(row[0])}</span><span>${escapeHtml(row[1])}</span>
+        </div>
+      `).join('');
+    }
+
+    function renderFeatured(store, isNearestDetected) {
+      const set = (id, val) => { const el = document.getElementById(id); if (el) el.textContent = val; };
+      const setHtml = (id, html) => { const el = document.getElementById(id); if (el) el.innerHTML = html; };
+      const setHref = (id, val) => { const el = document.getElementById(id); if (el) el.setAttribute('href', val); };
+
+      // Card title — italicize the last word for the gold accent
+      const nameWords = store.name.split(' ');
+      const lastWord = escapeHtml(nameWords.pop());
+      const prefix = escapeHtml(nameWords.join(' '));
+      setHtml('locCardTitle', `${prefix} <em>${lastWord}</em>`);
+
+      // Map fallback
+      set('locFallbackName', store.name);
+      setHtml('locFallbackAddr', `${escapeHtml(store.addressLine)}<br>${escapeHtml(store.city)}, ${escapeHtml(store.region)} ${escapeHtml(store.postal)}`);
+
+      // Map label
+      set('locMapLabel', `◉ ${store.name}`);
+
+      // Iframe src
+      const iframe = document.getElementById('locMapIframe');
+      if (iframe) iframe.src = `https://www.google.com/maps?q=${store.embedQ}&output=embed`;
+
+      // Address row
+      const addr = document.getElementById('locAddressLink');
+      if (addr) {
+        addr.setAttribute('href', store.mapsUrl);
+        addr.innerHTML = `${escapeHtml(store.addressLine)}<br>${escapeHtml(store.city)}, ${escapeHtml(store.region)} ${escapeHtml(store.postal)}`;
+      }
+
+      // Phone
+      const phone = document.getElementById('locPhoneLink');
+      if (phone) { phone.textContent = store.phone; phone.setAttribute('href', store.phoneHref); }
+
+      // CTAs
+      setHref('locDirectionsBtn', store.mapsUrl);
+      setHref('locDirectionsTop', store.mapsUrl);
+      setHref('locWhatsappBtn', `https://wa.me/${store.whatsapp}?text=Hi%20${encodeURIComponent(store.brand)}%2C`);
+      setHref('locStorePage', `/${store.id}`);
+
+      // Hours
+      renderHours(store, document.getElementById('hoursList'));
+
+      // Live open/closed status — featured card + hero tag
+      const st = window.getStoreStatus(store);
+      const locStatus = document.getElementById('locStatus');
+      if (locStatus) {
+        locStatus.innerHTML =
+          `<span class="status-pill is-${st.state}"><span class="status-dot"></span>${st.label}</span>` +
+          (st.detail ? `<span class="status-detail">${escapeHtml(st.detail)}</span>` : '');
+      }
+      const heroTag = document.getElementById('heroTag');
+      const heroTagText = document.getElementById('heroTagText');
+      if (heroTag) heroTag.className = 'hero-tag st-' + st.state;
+      if (heroTagText) {
+        heroTagText.textContent = st.state === 'soon'
+          ? `${store.city} · Coming Soon`
+          : `${store.city} · ${st.label}${st.detail ? ' · ' + st.detail : ''}`;
+      }
+
+      // Hero — eyebrow, vertical side rail, headline address line all
+      // reflect the one featured store (no mixed Victoria/Peachland).
+      set('heroEyebrow', `${store.brand} · ${store.city}, ${store.region}`);
+      set('heroSideBrand', store.brand);
+      set('heroSideCity', `${store.city}, ${store.region}`);
+      set('heroDisplayLine', `— ${store.addressLine} · ${store.city}`);
+
+      // Nearest badge
+      if (isNearestDetected) {
+        const b = document.getElementById('nearestBanner');
+        if (b) { b.removeAttribute('hidden'); set('nbCity', store.city); }
+        const ey = document.getElementById('locEyebrow');
+        if (ey) ey.textContent = `Nearest to you · ${store.city}`;
+      }
+
+      // Mark dropdown items
+      document.querySelectorAll('[data-store-id]').forEach(el => el.classList.remove('dd-nearest'));
+      document.querySelectorAll(`[data-store-id="${store.id}"]`).forEach(el => el.classList.add('dd-nearest'));
+
+      // Mark store-grid card as nearest
+      const card = document.querySelector(`.store-card[data-store-id="${store.id}"]`);
+      if (card && isNearestDetected) {
+        card.classList.add('is-nearest');
+        const arrow = card.querySelector('.store-card-arrow');
+        if (arrow) arrow.textContent = 'Your nearest →';
+      }
+
+      // ---- Contact section / nav / footer reflect the highlighted store ----
+      const storeEmail = store.email || 'hello@vapeshacks.com';
+      const waSvg = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-0.3-0.1-1.7-0.8-2-0.9-0.3-0.1-0.5-0.1-0.7 0.1-0.2 0.3-0.8 0.9-1 1.1-0.2 0.2-0.4 0.2-0.7 0.1-0.3-0.1-1.3-0.5-2.4-1.5-0.9-0.8-1.5-1.8-1.7-2.1-0.2-0.3 0-0.5 0.1-0.6 0.1-0.1 0.3-0.4 0.4-0.5 0.1-0.2 0.2-0.3 0.3-0.5 0.1-0.2 0-0.4 0-0.5-0.1-0.1-0.7-1.6-0.9-2.2-0.2-0.6-0.5-0.5-0.7-0.5h-0.6c-0.2 0-0.5 0.1-0.8 0.4-0.3 0.3-1 1-1 2.5 0 1.4 1.1 2.8 1.2 3 0.1 0.2 2.1 3.2 5 4.4 0.7 0.3 1.3 0.5 1.7 0.6 0.7 0.2 1.4 0.2 1.9 0.1 0.6-0.1 1.7-0.7 2-1.4 0.3-0.7 0.3-1.3 0.2-1.4-0.1-0.1-0.3-0.2-0.6-0.3zM12 2C6.5 2 2 6.5 2 12c0 1.8 0.5 3.4 1.3 4.9L2 22l5.3-1.4c1.4 0.8 3 1.2 4.7 1.2 5.5 0 10-4.5 10-10S17.5 2 12 2zm0 18.3c-1.5 0-3-0.4-4.3-1.2l-0.3-0.2-3.1 0.8 0.8-3.1-0.2-0.3C4.1 15 3.7 13.5 3.7 12c0-4.6 3.7-8.3 8.3-8.3s8.3 3.7 8.3 8.3-3.7 8.3-8.3 8.3z"/></svg>';
+      const igSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/></svg>';
+      const phSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M5 4h4l2 5-3 1.5c1 2 3 4 5 5L14.5 12l5 2v4a1 1 0 0 1-1 1A15 15 0 0 1 4 5a1 1 0 0 1 1-1z"/></svg>';
+      const mlSvg = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="1"/><path d="M3 6l9 7 9-7"/></svg>';
+      const waText = encodeURIComponent('Hi ' + store.brand + ', ');
+
+      set('contactStoreName', store.city);
+
+      let channels =
+        `<a class="channel featured" href="https://wa.me/${store.whatsapp}?text=${waText}" target="_blank" rel="noopener">
+           <div class="ch-ico">${waSvg}</div>
+           <div class="ch-lbl">WhatsApp · Fastest reply</div>
+           <div class="ch-val">${escapeHtml(store.phone)}</div>
+         </a>`;
+      if (store.instagram) {
+        channels +=
+          `<a class="channel" href="https://www.instagram.com/${store.instagram}" target="_blank" rel="noopener">
+             <div class="ch-ico">${igSvg}</div>
+             <div class="ch-lbl">Instagram · DMs open</div>
+             <div class="ch-val">@${escapeHtml(store.instagram)}</div>
+           </a>`;
+      }
+      channels +=
+        `<a class="channel" href="${store.phoneHref}">
+           <div class="ch-ico">${phSvg}</div>
+           <div class="ch-lbl">Phone</div>
+           <div class="ch-val">${escapeHtml(store.phone)}</div>
+         </a>
+         <a class="channel" href="mailto:${escapeHtml(storeEmail)}">
+           <div class="ch-ico">${mlSvg}</div>
+           <div class="ch-lbl">Email</div>
+           <div class="ch-val">${escapeHtml(storeEmail)}</div>
+         </a>`;
+      const cc = document.getElementById('contactChannels');
+      if (cc) { cc.innerHTML = channels; cc.classList.toggle('cc-2', !store.instagram); }
+
+      // Nav icons
+      const navWa = document.getElementById('navWa');
+      if (navWa) navWa.setAttribute('href', `https://wa.me/${store.whatsapp}`);
+      const navInsta = document.getElementById('navInsta');
+      if (navInsta) {
+        if (store.instagram) {
+          navInsta.setAttribute('href', `https://www.instagram.com/${store.instagram}`);
+          navInsta.style.display = '';
+        } else {
+          navInsta.style.display = 'none';
+        }
+      }
+
+      // Footer "Reach us"
+      const footWa = document.getElementById('footWa');
+      if (footWa) { footWa.setAttribute('href', `https://wa.me/${store.whatsapp}`); footWa.textContent = `WhatsApp · ${store.phone}`; }
+      const footPhone = document.getElementById('footPhone');
+      if (footPhone) { footPhone.setAttribute('href', store.phoneHref); footPhone.textContent = `Phone · ${store.phone}`; }
+      const footEmail = document.getElementById('footEmail');
+      if (footEmail) { footEmail.setAttribute('href', 'mailto:' + storeEmail); footEmail.textContent = storeEmail; }
+      const footInstaLi = document.getElementById('footInstaLi');
+      const footInsta = document.getElementById('footInsta');
+      if (store.instagram && footInsta) {
+        if (footInstaLi) footInstaLi.style.display = '';
+        footInsta.setAttribute('href', `https://www.instagram.com/${store.instagram}`);
+        footInsta.textContent = `Instagram · @${store.instagram}`;
+      } else if (footInstaLi) {
+        footInstaLi.style.display = 'none';
+      }
+    }
+
+    // Initial paint with Victoria (synchronous, no flash of empty content).
+    const defaultStore = stores[0];
+    renderFeatured(defaultStore, false);
+
+    // Then async-detect and re-render if a different store is closer.
+    if (typeof window.detectLocation === 'function') {
+      window.detectLocation().then(geo => {
+        if (!geo) return;
+        const nearest = window.findNearestStore(geo.lat, geo.lng);
+        if (nearest && nearest.id !== defaultStore.id) {
+          renderFeatured(nearest, true);
+        } else if (nearest) {
+          // Same store but still mark it as the detected nearest
+          renderFeatured(nearest, true);
+        }
+      }).catch(() => {});
+    }
   })();
 
-  // ============ Smooth scroll for ALL in-page anchors ============
+  // ============ Mobile drawer toggle ============
   (function () {
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
+    const burger = document.getElementById('navBurger');
+    const drawer = document.getElementById('navDrawer');
+    if (!burger || !drawer) return;
+    let backdrop = document.querySelector('.nav-drawer-backdrop');
+    if (!backdrop) {
+      backdrop = document.createElement('div');
+      backdrop.className = 'nav-drawer-backdrop';
+      document.body.appendChild(backdrop);
+    }
+    function setOpen(open) {
+      burger.classList.toggle('open', open);
+      drawer.classList.toggle('open', open);
+      backdrop.classList.toggle('open', open);
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      drawer.setAttribute('aria-hidden', open ? 'false' : 'true');
+      document.body.classList.toggle('drawer-open', open);
+    }
+    burger.addEventListener('click', () => setOpen(!drawer.classList.contains('open')));
+    backdrop.addEventListener('click', () => setOpen(false));
+    drawer.addEventListener('click', (e) => {
+      if (e.target.matches('a')) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+  })();
+
+  // ============ Smooth scroll for in-page anchors + Home ============
+  // Handles  #section  /#section  and  /  (Home / logo → scroll to top).
+  (function () {
+    document.querySelectorAll('a[href^="#"], a[href^="/#"], a[href="/"]').forEach(a => {
       a.addEventListener('click', (e) => {
-        const id = a.getAttribute('href').slice(1);
+        const raw = a.getAttribute('href');
+        const id = raw === '/' ? 'top' : raw.replace(/^\/?#/, '');
         if (!id) return;
+        if (id === 'top') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          history.replaceState(null, '', '/');
+          return;
+        }
         const target = document.getElementById(id);
-        if (!target) return;
+        if (!target) return; // section not on this page → let the link navigate
         e.preventDefault();
         const navH = (document.getElementById('topNav')?.offsetHeight || 70) + 12;
         const y = target.getBoundingClientRect().top + window.scrollY - navH;
@@ -2304,37 +3196,6 @@
       sections.forEach(s => { if (s.offsetTop <= y) current = s.id; });
       setActive(current);
     }, { passive: true });
-  })();
-
-  // ============ Contact form ============
-  (function () {
-    const form = document.getElementById('contactForm');
-    if (!form) return;
-    function toast(msg) {
-      let t = document.querySelector('.toast');
-      if (!t) { t = document.createElement('div'); t.className = 'toast'; document.body.appendChild(t); }
-      t.innerHTML = '<span class="toast-dot"></span>' + msg;
-      t.classList.add('show');
-      clearTimeout(t._h);
-      t._h = setTimeout(() => t.classList.remove('show'), 2800);
-    }
-    form.addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = form.name.value.trim();
-      const email = form.email.value.trim();
-      const message = form.message.value.trim();
-      if (!name || !email || !message) {
-        toast('Please fill in every field');
-        return;
-      }
-      // No backend wired up yet — open WhatsApp with the message prefilled as a fallback
-      const text = encodeURIComponent('Hi Vape Shack, this is ' + name + ' (' + email + '). ' + message);
-      toast('Sending you to WhatsApp…');
-      setTimeout(() => {
-        window.open('https://wa.me/17789310879?text=' + text, '_blank', 'noopener');
-        form.reset();
-      }, 600);
-    });
   })();
 </script>
 

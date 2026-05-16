@@ -1,14 +1,40 @@
+# Vape Shack — runs on the Hostinger VPS alongside the existing
+# root-traefik-1 / postgresql / n8n / webhook-buffer containers.
+# Traefik (already on the host) routes the domain to this container via
+# the labels below — no ports are published, nothing else restarts.
+#
+# Serves both the apex (vapeshacks.com) and www. Once DNS for
+# vapeshacks.com points at the VPS IP, Traefik fetches a Let's Encrypt
+# cert automatically.
+
 services:
   web:
     build: .
     image: vape-shack:latest
     container_name: vape-shack
     restart: unless-stopped
-    ports:
-      - "${HOST_PORT:-8080}:80"
+    networks:
+      - root_default
     healthcheck:
       test: ["CMD", "wget", "-qO-", "http://127.0.0.1/healthz"]
       interval: 30s
       timeout: 3s
       retries: 3
       start_period: 5s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.docker.network=root_default"
+      - "traefik.http.routers.vape-shack.rule=Host(`vapeshacks.com`) || Host(`www.vapeshacks.com`)"
+      - "traefik.http.routers.vape-shack.entrypoints=web,websecure"
+      - "traefik.http.routers.vape-shack.tls=true"
+      - "traefik.http.routers.vape-shack.tls.certresolver=mytlschallenge"
+      - "traefik.http.services.vape-shack.loadbalancer.server.port=80"
+      # Redirect www → apex so vapeshacks.com is the single canonical host
+      - "traefik.http.routers.vape-shack.middlewares=vape-www-redirect"
+      - "traefik.http.middlewares.vape-www-redirect.redirectregex.regex=^https?://www\\.vapeshacks\\.com/(.*)"
+      - "traefik.http.middlewares.vape-www-redirect.redirectregex.replacement=https://vapeshacks.com/$${1}"
+      - "traefik.http.middlewares.vape-www-redirect.redirectregex.permanent=true"
+
+networks:
+  root_default:
+    external: true
