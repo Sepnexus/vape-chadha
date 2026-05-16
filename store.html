@@ -545,9 +545,9 @@
         <h5>Reach us</h5>
         <ul>
           <li><a id="footerWa" href="https://wa.me/17789310879" target="_blank" rel="noopener">WhatsApp</a></li>
-          <li><a id="footerInsta" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram · @vapeshack.victoria</a></li>
+          <li id="footerInstaLi"><a id="footerInsta" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener">Instagram · @vapeshack.victoria</a></li>
           <li><a id="footerPhone" href="tel:+17789310879">+1 (778) 931-0879</a></li>
-          <li><a href="mailto:hello@vapeshacks.com">hello@vapeshacks.com</a></li>
+          <li><a id="footerEmail" href="mailto:hello@vapeshacks.com">hello@vapeshacks.com</a></li>
         </ul>
       </div>
     </div>
@@ -558,7 +558,7 @@
   </div>
 </footer>
 
-<script src="assets/stores.js"></script>
+<script src="assets/stores.js?v=20260516"></script>
 <script>
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
   const params = new URLSearchParams(location.search);
@@ -572,16 +572,32 @@
 
   // Update nav contact links to use this store's details
   const setHref = (id, val) => { const el = document.getElementById(id); if (el) el.setAttribute('href', val); };
-  setHref('navInsta', 'https://www.instagram.com/' + store.instagram);
+  const remove = (id) => { const el = document.getElementById(id); if (el) el.remove(); };
+  const storeEmail = store.email || 'hello@vapeshacks.com';
+
   setHref('navWa', 'https://wa.me/' + store.whatsapp);
-  setHref('drawerInsta', 'https://www.instagram.com/' + store.instagram);
   setHref('drawerWa', 'https://wa.me/' + store.whatsapp);
   setHref('drawerCall', store.phoneHref);
   setHref('footerWa', 'https://wa.me/' + store.whatsapp);
-  setHref('footerInsta', 'https://www.instagram.com/' + store.instagram);
-  document.getElementById('footerInsta').textContent = `Instagram · @${store.instagram}`;
   setHref('footerPhone', store.phoneHref);
   document.getElementById('footerPhone').textContent = store.phone;
+
+  // Instagram is per-store — some stores don't have one. Drop the
+  // nav icon / drawer link / footer line entirely when absent.
+  if (store.instagram) {
+    setHref('navInsta', 'https://www.instagram.com/' + store.instagram);
+    setHref('drawerInsta', 'https://www.instagram.com/' + store.instagram);
+    setHref('footerInsta', 'https://www.instagram.com/' + store.instagram);
+    document.getElementById('footerInsta').textContent = `Instagram · @${store.instagram}`;
+  } else {
+    remove('navInsta');       // nav icon
+    remove('drawerInsta');    // drawer link
+    remove('footerInstaLi');  // footer list item
+  }
+
+  // Footer email reflects the store
+  const footEmail = document.getElementById('footerEmail');
+  if (footEmail) { footEmail.setAttribute('href', 'mailto:' + storeEmail); footEmail.textContent = storeEmail; }
 
   // Populate nav dropdown + drawer
   function renderStoreNav() {
@@ -682,9 +698,15 @@
             <div class="hours-list">${hoursHtml}</div>
           </div>
           <div class="detail-card">
-            <h4>Find us online</h4>
-            <div class="big"><a href="https://www.instagram.com/${store.instagram}" target="_blank" rel="noopener">@${escapeHtml(store.instagram)}</a></div>
-            <small style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--ink-mute);">Instagram · DMs open</small>
+            ${store.instagram ? `
+              <h4>Find us online</h4>
+              <div class="big"><a href="https://www.instagram.com/${store.instagram}" target="_blank" rel="noopener">@${escapeHtml(store.instagram)}</a></div>
+              <small style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--ink-mute);">Instagram · DMs open</small>
+            ` : `
+              <h4>Email</h4>
+              <div class="big"><a href="mailto:${escapeHtml(storeEmail)}">${escapeHtml(storeEmail)}</a></div>
+              <small style="font-family:var(--mono);font-size:10px;letter-spacing:0.14em;color:var(--ink-mute);">We reply same day</small>
+            `}
           </div>
         </div>
 
