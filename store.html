@@ -491,7 +491,7 @@
 
 <!-- NAV -->
 <nav class="top" id="topNav">
-  <a href="index.html" class="logo">
+  <a href="/" class="logo">
     <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
     <span class="logo-lockup">
       <span class="logo-mark">V</span>
@@ -499,16 +499,16 @@
     </span>
   </a>
   <ul class="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="index.html#about">About</a></li>
+    <li><a href="/">Home</a></li>
+    <li><a href="/#about">About</a></li>
     <li class="has-dropdown">
-      <a href="index.html#locations" class="active">
+      <a href="/#locations" class="active">
         Locations
         <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" style="margin-left:6px;vertical-align:middle"><path d="M2 4l3 3 3-3"/></svg>
       </a>
       <ul class="dropdown" id="locationsDropdown"></ul>
     </li>
-    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="/#contact">Contact</a></li>
   </ul>
   <div class="nav-actions">
     <a id="navInsta" href="https://www.instagram.com/vapeshack.victoria" target="_blank" rel="noopener" class="nav-icon" aria-label="Instagram">
@@ -527,13 +527,13 @@
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="nav-drawer-inner">
     <ul class="nav-drawer-list">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="index.html#about">About</a></li>
+      <li><a href="/">Home</a></li>
+      <li><a href="/#about">About</a></li>
       <li>
         <div class="drawer-group-label">Locations</div>
         <ul class="nav-drawer-sub" id="drawerLocations"></ul>
       </li>
-      <li><a href="index.html#contact">Contact</a></li>
+      <li><a href="/#contact">Contact</a></li>
     </ul>
     <div class="nav-drawer-foot">
       <a id="drawerInsta" href="#" target="_blank" rel="noopener">Instagram</a>
@@ -550,7 +550,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="index.html" class="logo">
+        <a href="/" class="logo">
           <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
           <span class="logo-lockup">
             <span class="logo-mark">V</span>
@@ -583,8 +583,15 @@
 <script src="assets/stores.js?v=20260516d"></script>
 <script>
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
+  // City comes from a clean path (/victoria) in production, or from
+  // ?city=victoria as a fallback (direct store.html hits / local dev).
   const params = new URLSearchParams(location.search);
-  const cityParam = (params.get('city') || 'victoria').toLowerCase();
+  let cityParam = params.get('city');
+  if (!cityParam) {
+    const seg = location.pathname.replace(/^\/+|\/+$/g, '').toLowerCase();
+    if (seg && seg !== 'store.html') cityParam = seg;
+  }
+  cityParam = (cityParam || 'victoria').toLowerCase();
   const store = window.getStoreById(cityParam) || window.STORES[0];
 
   // Update page title + meta
@@ -628,7 +635,7 @@
     const footList = document.getElementById('footerLocations');
     if (dd) dd.innerHTML = window.STORES.map(s => `
       <li class="${s.id === store.id ? 'dd-active' : ''} ${s.status === 'coming-soon' ? 'dd-soon' : ''}">
-        <a href="store.html?city=${s.id}">
+        <a href="/${s.id}">
           <span><span class="dd-city">${escapeHtml(s.city)}</span> <span class="dd-region">· ${escapeHtml(s.region)}</span></span>
           ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
         </a>
@@ -636,14 +643,14 @@
     `).join('');
     if (drawer) drawer.innerHTML = window.STORES.map(s => `
       <li class="${s.id === store.id ? 'dd-active' : ''} ${s.status === 'coming-soon' ? 'dd-soon' : ''}">
-        <a href="store.html?city=${s.id}">
+        <a href="/${s.id}">
           <span>${escapeHtml(s.city)}</span>
           ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
         </a>
       </li>
     `).join('');
     if (footList) footList.innerHTML = window.STORES.map(s => `
-      <li><a href="store.html?city=${s.id}">${escapeHtml(s.city)} · ${escapeHtml(s.addressLine)}${s.status === 'coming-soon' ? ' · Soon' : ''}</a></li>
+      <li><a href="/${s.id}">${escapeHtml(s.city)} · ${escapeHtml(s.addressLine)}${s.status === 'coming-soon' ? ' · Soon' : ''}</a></li>
     `).join('');
   }
   renderStoreNav();
@@ -662,7 +669,7 @@
 
   const others = window.STORES.filter(s => s.id !== store.id);
   const othersHtml = others.map(s => `
-    <a href="store.html?city=${s.id}" class="other-card ${s.status === 'coming-soon' ? 'is-soon' : ''}">
+    <a href="/${s.id}" class="other-card ${s.status === 'coming-soon' ? 'is-soon' : ''}">
       ${statusPillHTML(s)}
       <div>
         <div class="other-brand">${escapeHtml(s.brand)}</div>
@@ -679,7 +686,7 @@
     <section class="store-hero">
       <div class="store-hero-grid"></div>
       <div class="container">
-        <a href="index.html#locations" class="store-back">← All locations</a>
+        <a href="/#locations" class="store-back">← All locations</a>
         ${isSoon ? '<span class="badge-soon">● Coming Soon</span><br>' : ''}
         <div class="store-brand">${escapeHtml(store.brand)} · ${escapeHtml(store.region)}, Canada</div>
         <h1 class="store-headline">${escapeHtml(store.city.split(' ')[0])}<br>${escapeHtml(store.city.split(' ').slice(1).join(' ')) ? '<em>' + escapeHtml(store.city.split(' ').slice(1).join(' ')) + '</em>' : '<em>store</em>'}</h1>

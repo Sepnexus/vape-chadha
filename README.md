@@ -15,18 +15,17 @@ Static HTML/CSS/JS (no build step). Served by nginx in a container.
 
 ## Run locally
 
-Open `index.html` directly in a browser, **or** with Docker:
+Use the dev server — it reproduces the production clean-URL routing
+(`/victoria` → `store.html`), which a plain file open or `python -m
+http.server` would not:
 
 ```sh
-docker compose up --build
-# → http://localhost:8080
+python3 dev-server.py
+# → http://localhost:5173
 ```
 
-Change the host port via `HOST_PORT` env var:
-
-```sh
-HOST_PORT=3000 docker compose up --build -d
-```
+Routes: `/` → home, `/victoria` `/osoyoos` `/princeton` `/peachland`
+`/sidney` → that store's page.
 
 ## Project layout
 

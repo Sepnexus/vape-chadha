@@ -2210,7 +2210,7 @@
 
 <!-- NAV -->
 <nav class="top" id="topNav">
-  <a href="#top" class="logo">
+  <a href="/" class="logo">
     <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
     <span class="logo-lockup">
       <span class="logo-mark">V</span>
@@ -2218,7 +2218,7 @@
     </span>
   </a>
   <ul class="nav-links">
-    <li><a href="#top" class="nav-anchor active" data-target="top">Home</a></li>
+    <li><a href="/" class="nav-anchor active" data-target="top">Home</a></li>
     <li><a href="#about" class="nav-anchor" data-target="about">About</a></li>
     <li class="has-dropdown">
       <a href="#locations" class="nav-anchor" data-target="locations">
@@ -2251,7 +2251,7 @@
 <div class="nav-drawer" id="navDrawer" aria-hidden="true">
   <div class="nav-drawer-inner">
     <ul class="nav-drawer-list">
-      <li><a href="#top" data-drawer-close>Home</a></li>
+      <li><a href="/" data-drawer-close>Home</a></li>
       <li><a href="#about" data-drawer-close>About</a></li>
       <li>
         <div class="drawer-group-label">Locations</div>
@@ -2659,7 +2659,7 @@
   <div class="container">
     <div class="footer-grid">
       <div class="footer-brand">
-        <a href="#top" class="logo">
+        <a href="/" class="logo">
           <img src="assets/logo.png" alt="Vape Shack" class="logo-img" onerror="this.closest('.logo').classList.add('no-logo-img');this.remove();">
           <span class="logo-lockup">
             <span class="logo-mark">V</span>
@@ -2671,7 +2671,7 @@
       <div>
         <h5>Explore</h5>
         <ul>
-          <li><a href="#top">Home</a></li>
+          <li><a href="/">Home</a></li>
           <li><a href="#about">About</a></li>
           <li><a href="#locations">Locations</a></li>
           <li><a href="#contact">Contact</a></li>
@@ -2680,11 +2680,11 @@
       <div>
         <h5>Locations</h5>
         <ul>
-          <li><a href="store.html?city=victoria">Victoria · 207 Menzies St</a></li>
-          <li><a href="store.html?city=osoyoos">Osoyoos · 8141 Main St</a></li>
-          <li><a href="store.html?city=princeton">Princeton · 133 Vermilion Ave</a></li>
-          <li><a href="store.html?city=peachland">Peachland · 5500 Clement Cr</a></li>
-          <li><a href="store.html?city=sidney">Sidney · 2310 Beacon Ave · Soon</a></li>
+          <li><a href="/victoria">Victoria · 207 Menzies St</a></li>
+          <li><a href="/osoyoos">Osoyoos · 8141 Main St</a></li>
+          <li><a href="/princeton">Princeton · 133 Vermilion Ave</a></li>
+          <li><a href="/peachland">Peachland · 5500 Clement Cr</a></li>
+          <li><a href="/sidney">Sidney · 2310 Beacon Ave · Soon</a></li>
         </ul>
       </div>
       <div>
@@ -2881,7 +2881,7 @@
     if (dd) {
       dd.innerHTML = stores.map(s => `
         <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
-          <a href="store.html?city=${s.id}">
+          <a href="/${s.id}">
             <span>
               <span class="dd-city">${escapeHtml(s.city)}</span>
               <span class="dd-region">· ${escapeHtml(s.region)}</span>
@@ -2897,7 +2897,7 @@
     if (drawer) {
       drawer.innerHTML = stores.map(s => `
         <li class="${s.status === 'coming-soon' ? 'dd-soon' : ''}" data-store-id="${s.id}">
-          <a href="store.html?city=${s.id}">
+          <a href="/${s.id}">
             <span>${escapeHtml(s.city)}</span>
             ${s.status === 'coming-soon' ? '<span class="dd-tag">Soon</span>' : ''}
           </a>
@@ -2915,7 +2915,7 @@
     const grid = document.getElementById('storeGrid');
     if (grid) {
       grid.innerHTML = stores.map(s => `
-        <a href="store.html?city=${s.id}" class="store-card ${s.status === 'coming-soon' ? 'is-soon' : ''}" data-store-id="${s.id}">
+        <a href="/${s.id}" class="store-card ${s.status === 'coming-soon' ? 'is-soon' : ''}" data-store-id="${s.id}">
           ${statusPillHTML(s)}
           <div>
             <div class="store-card-brand">${escapeHtml(s.brand)}</div>
@@ -2975,7 +2975,7 @@
       setHref('locDirectionsBtn', store.mapsUrl);
       setHref('locDirectionsTop', store.mapsUrl);
       setHref('locWhatsappBtn', `https://wa.me/${store.whatsapp}?text=Hi%20${encodeURIComponent(store.brand)}%2C`);
-      setHref('locStorePage', `store.html?city=${store.id}`);
+      setHref('locStorePage', `/${store.id}`);
 
       // Hours
       renderHours(store, document.getElementById('hoursList'));
@@ -3134,14 +3134,22 @@
     });
   })();
 
-  // ============ Smooth scroll for ALL in-page anchors ============
+  // ============ Smooth scroll for in-page anchors + Home ============
+  // Handles  #section  /#section  and  /  (Home / logo → scroll to top).
   (function () {
-    document.querySelectorAll('a[href^="#"]').forEach(a => {
+    document.querySelectorAll('a[href^="#"], a[href^="/#"], a[href="/"]').forEach(a => {
       a.addEventListener('click', (e) => {
-        const id = a.getAttribute('href').slice(1);
+        const raw = a.getAttribute('href');
+        const id = raw === '/' ? 'top' : raw.replace(/^\/?#/, '');
         if (!id) return;
+        if (id === 'top') {
+          e.preventDefault();
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+          history.replaceState(null, '', '/');
+          return;
+        }
         const target = document.getElementById(id);
-        if (!target) return;
+        if (!target) return; // section not on this page → let the link navigate
         e.preventDefault();
         const navH = (document.getElementById('topNav')?.offsetHeight || 70) + 12;
         const y = target.getBoundingClientRect().top + window.scrollY - navH;
