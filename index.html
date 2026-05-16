@@ -1292,23 +1292,25 @@
   .category:hover .category-num { color: var(--gold); }
   .category-shape {
     position: absolute;
-    top: 50%; left: 50%;
+    top: 46%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 60px; height: 140px;
-    background: linear-gradient(180deg, #1a1a1a 30%, var(--gold) 30%, var(--gold) 60%, #1a1a1a 60%);
-    border-radius: 8px;
-    box-shadow: 0 20px 50px rgba(232,181,48,0.25);
+    width: 132px; height: 132px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
     transition: transform 0.7s cubic-bezier(0.2, 0.8, 0.2, 1);
     animation: floatY 8s ease-in-out infinite;
+  }
+  .category-shape svg {
+    width: 100%; height: 100%;
+    color: var(--gold);
+    filter: drop-shadow(0 14px 26px rgba(232,181,48,0.28));
   }
   @keyframes floatY {
     0%, 100% { transform: translate(-50%, -50%) translateY(0); }
     50% { transform: translate(-50%, -52%) translateY(-8px); }
   }
-  .category:hover .category-shape { transform: translate(-50%, -50%) rotate(-8deg) scale(1.08); animation-play-state: paused; }
-  .category-shape.pods { width: 90px; height: 110px; border-radius: 14px; background: linear-gradient(135deg, var(--gold), #1a1a1a); }
-  .category-shape.eliquids { width: 50px; height: 130px; border-radius: 8px 8px 4px 4px; background: linear-gradient(180deg, #1a1a1a 0 18%, var(--gold) 18% 88%, #1a1a1a 88%); }
-  .category-shape.access { width: 110px; height: 70px; border-radius: 10px; background: linear-gradient(180deg, #1a1a1a, #2a2a2a); border: 1px solid var(--gold); }
+  .category:hover .category-shape { transform: translate(-50%, -50%) rotate(-6deg) scale(1.1); animation-play-state: paused; }
   .category h4 {
     font-family: var(--serif);
     font-style: italic;
@@ -1728,6 +1730,71 @@
   }
   .store-card:hover .store-card-arrow { gap: 14px; }
 
+  /* ============ Live open/closed status pill ============ */
+  .status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    font-family: var(--mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .status-pill.is-open { color: #4ade80; }
+  .status-pill.is-open .status-dot {
+    background: #4ade80;
+    box-shadow: 0 0 8px #4ade80;
+    animation: blink 2s ease-in-out infinite;
+  }
+  .status-pill.is-closed { color: var(--ink-mute); }
+  .status-pill.is-closed .status-dot { background: var(--ink-mute); }
+  .status-pill.is-soon { color: var(--gold); }
+  .status-pill.is-soon .status-dot {
+    background: var(--gold);
+    box-shadow: 0 0 8px rgba(232,181,48,0.55);
+  }
+  .status-detail {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.1em;
+    color: var(--ink-mute);
+    text-transform: uppercase;
+  }
+  /* status pill used as the store-card corner tag */
+  .store-card .status-pill {
+    align-self: flex-start;
+    padding: 4px 9px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .store-card .status-pill.is-closed { border-color: var(--line); }
+
+  /* status row under the featured location card title */
+  .loc-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: -14px;
+  }
+  .loc-status .status-pill {
+    padding: 5px 11px;
+    border: 1px solid currentColor;
+    border-radius: 2px;
+  }
+  .loc-status .status-pill.is-closed { border-color: var(--line); }
+
+  /* hero tag dot reflects the nearest store's live status */
+  .hero-tag.st-open .dot { background: #4ade80; box-shadow: 0 0 12px #4ade80; }
+  .hero-tag.st-closed .dot { background: var(--ink-mute); box-shadow: none; animation: none; }
+
   /* Contact */
   .contact-section { padding: 96px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); position: relative; overflow: hidden; }
   .contact-section::before {
@@ -2064,10 +2131,7 @@
     .category { padding: 22px 18px; }
     .category h4 { font-size: 20px; }
     .category-num { font-size: 26px; top: 14px; right: 16px; }
-    .category-shape { width: 50px; height: 110px; }
-    .category-shape.pods { width: 70px; height: 90px; }
-    .category-shape.eliquids { width: 40px; height: 100px; }
-    .category-shape.access { width: 80px; height: 56px; }
+    .category-shape { width: 104px; height: 104px; }
     .about-grid { grid-template-columns: 1fr; gap: 32px; }
     .about-image { aspect-ratio: 4/3; }
     .about-image::after { font-size: 140px; }
@@ -2116,10 +2180,7 @@
     .hero-bottom { margin: 24px 18px 0; }
     .category { aspect-ratio: 4 / 5; }
     .category h4 { font-size: 17px; }
-    .category-shape { width: 36px; height: 80px; }
-    .category-shape.pods { width: 56px; height: 70px; }
-    .category-shape.eliquids { width: 30px; height: 76px; }
-    .category-shape.access { width: 64px; height: 44px; }
+    .category-shape { width: 92px; height: 92px; }
     .footer-grid { grid-template-columns: 1fr; gap: 28px; }
     .channel.featured .ch-val { font-size: 18px; }
   }
@@ -2213,9 +2274,9 @@
   <div class="hero-stripe s1"></div>
   <div class="hero-stripe s2"></div>
 
-  <div class="hero-tag">
-    <span class="dot"></span>
-    <span class="text">Open Today · 8am – 11pm</span>
+  <div class="hero-tag" id="heroTag">
+    <span class="dot" id="heroTagDot"></span>
+    <span class="text" id="heroTagText">Vape Shack · Victoria, BC</span>
   </div>
 
   <div class="hero-side">
@@ -2304,7 +2365,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">01</div>
-        <div class="category-shape pods"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="35" y="34" width="30" height="55" rx="9"/>
+            <rect x="42" y="13" width="16" height="23" rx="5"/>
+            <path d="M50 13 V8"/>
+            <rect x="42" y="45" width="16" height="17" rx="2.5" stroke-width="2.2"/>
+            <path d="M44 71 h12" stroke-width="2.4"/>
+          </svg>
+        </div>
         <h4>Pod Systems</h4>
         <small>Refillable &amp; disposable</small>
         <span class="category-arrow">→</span>
@@ -2312,7 +2381,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">02</div>
-        <div class="category-shape"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="27" y="44" width="46" height="45" rx="7"/>
+            <circle cx="40" cy="58" r="7"/>
+            <rect x="52" y="70" width="15" height="11" rx="2" stroke-width="2.2"/>
+            <rect x="41" y="20" width="18" height="25" rx="3"/>
+            <path d="M46 20 q4 -8 8 0"/>
+          </svg>
+        </div>
         <h4>Mods</h4>
         <small>Variable wattage &amp; mech</small>
         <span class="category-arrow">→</span>
@@ -2320,7 +2397,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">03</div>
-        <div class="category-shape eliquids"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <path d="M37 42 q0 -4 4 -4 h18 q4 0 4 4 v40 q0 6 -6 6 H43 q-6 0 -6 -6 Z"/>
+            <rect x="44" y="29" width="12" height="11"/>
+            <rect x="39" y="13" width="22" height="17" rx="3"/>
+            <path d="M44 58 h12" stroke-width="2.2"/>
+            <path d="M44 68 h12" stroke-width="2.2"/>
+          </svg>
+        </div>
         <h4>E-Liquids</h4>
         <small>Freebase &amp; salt nic</small>
         <span class="category-arrow">→</span>
@@ -2328,7 +2413,15 @@
       <div class="category">
         <div class="category-bg"></div>
         <div class="category-num">04</div>
-        <div class="category-shape access"></div>
+        <div class="category-shape">
+          <svg viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="3" stroke-linejoin="round" stroke-linecap="round">
+            <rect x="32" y="40" width="36" height="32" rx="4"/>
+            <rect x="44" y="30" width="12" height="10"/>
+            <path d="M50 30 V22"/>
+            <path d="M32 48 h36 M32 56 h36 M32 64 h36" stroke-width="2.2"/>
+            <path d="M44 72 v8 M56 72 v8"/>
+          </svg>
+        </div>
         <h4>Accessories</h4>
         <small>Coils, tanks &amp; more</small>
         <span class="category-arrow">→</span>
@@ -2414,6 +2507,7 @@
 
       <div class="location-card reveal">
         <h3 id="locCardTitle">Vape Shack <em>Victoria</em></h3>
+        <div class="loc-status" id="locStatus"></div>
 
         <div class="location-row">
           <div class="ico"><svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M8 14s5-5 5-9a5 5 0 0 0-10 0c0 4 5 9 5 9z"/><circle cx="8" cy="5" r="2"/></svg></div>
@@ -2610,7 +2704,7 @@
   </div>
 </footer>
 
-<script src="assets/stores.js?v=20260516c"></script>
+<script src="assets/stores.js?v=20260516d"></script>
 <script>
   // ============ AGE GATE ============
   function enterSite() {
@@ -2812,13 +2906,17 @@
     }
 
     // -- Populate "all locations" grid --
+    // Live open/closed status pill markup for a store
+    function statusPillHTML(s) {
+      const st = window.getStoreStatus(s);
+      return `<span class="status-pill is-${st.state}"><span class="status-dot"></span>${st.label}</span>`;
+    }
+
     const grid = document.getElementById('storeGrid');
     if (grid) {
       grid.innerHTML = stores.map(s => `
         <a href="store.html?city=${s.id}" class="store-card ${s.status === 'coming-soon' ? 'is-soon' : ''}" data-store-id="${s.id}">
-          ${s.status === 'coming-soon'
-            ? '<span class="store-card-tag tag-soon">Coming Soon</span>'
-            : '<span class="store-card-tag" data-role="open">Open</span>'}
+          ${statusPillHTML(s)}
           <div>
             <div class="store-card-brand">${escapeHtml(s.brand)}</div>
             <div class="store-card-city">${escapeHtml(s.city)}</div>
@@ -2882,6 +2980,23 @@
       // Hours
       renderHours(store, document.getElementById('hoursList'));
 
+      // Live open/closed status — featured card + hero tag
+      const st = window.getStoreStatus(store);
+      const locStatus = document.getElementById('locStatus');
+      if (locStatus) {
+        locStatus.innerHTML =
+          `<span class="status-pill is-${st.state}"><span class="status-dot"></span>${st.label}</span>` +
+          (st.detail ? `<span class="status-detail">${escapeHtml(st.detail)}</span>` : '');
+      }
+      const heroTag = document.getElementById('heroTag');
+      const heroTagText = document.getElementById('heroTagText');
+      if (heroTag) heroTag.className = 'hero-tag st-' + st.state;
+      if (heroTagText) {
+        heroTagText.textContent = st.state === 'soon'
+          ? `${store.city} · Coming Soon`
+          : `${store.city} · ${st.label}${st.detail ? ' · ' + st.detail : ''}`;
+      }
+
       // Nearest badge
       if (isNearestDetected) {
         const b = document.getElementById('nearestBanner');
@@ -2898,8 +3013,8 @@
       const card = document.querySelector(`.store-card[data-store-id="${store.id}"]`);
       if (card && isNearestDetected) {
         card.classList.add('is-nearest');
-        const tag = card.querySelector('[data-role="open"]');
-        if (tag) tag.textContent = 'Nearest';
+        const arrow = card.querySelector('.store-card-arrow');
+        if (arrow) arrow.textContent = 'Your nearest →';
       }
 
       // ---- Contact section / nav / footer reflect the highlighted store ----

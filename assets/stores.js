@@ -142,8 +142,8 @@ window.STORES = [
     phone: '+1 (778) 931-0879',
     phoneHref: 'tel:+17789310879',
     whatsapp: '17789310879',
-    instagram: 'vapeshack.victoria',
-    email: 'hello@vapeshacks.com',
+    instagram: null,
+    email: 'sidneyvapes00@gmail.com',
     mapsUrl: 'https://www.google.com/maps/search/?api=1&query=2310+Beacon+Ave+Sidney+BC+V8L+1X2',
     embedQ: '2310%20Beacon%20Ave%2C%20Sidney%2C%20BC%20V8L%201X2',
     hours: [
@@ -163,6 +163,74 @@ window.STORES = [
 
 window.getStoreById = function (id) {
   return window.STORES.find(s => s.id === id);
+};
+
+// ============ LIVE OPEN / CLOSED STATUS ============
+// All stores are in BC (Pacific Time). We evaluate "open right now"
+// in America/Vancouver so the result is correct regardless of where
+// the visitor is browsing from.
+const DAY_NAMES = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+
+function parseClock(str) {
+  // "8:00 AM" / "12:00 AM" / "11:00 PM" -> minutes since midnight
+  const m = String(str).trim().match(/(\d{1,2}):(\d{2})\s*(AM|PM)/i);
+  if (!m) return null;
+  let h = parseInt(m[1], 10) % 12;
+  if (/PM/i.test(m[3])) h += 12;
+  return h * 60 + parseInt(m[2], 10);
+}
+
+window.getStoreStatus = function (store) {
+  if (store.status === 'coming-soon') {
+    return { state: 'soon', label: 'Coming Soon', detail: 'Opening soon' };
+  }
+  let dayIdx, nowMin;
+  try {
+    const parts = {};
+    new Intl.DateTimeFormat('en-US', {
+      timeZone: 'America/Vancouver', hour12: false,
+      weekday: 'long', hour: '2-digit', minute: '2-digit'
+    }).formatToParts(new Date()).forEach(p => { parts[p.type] = p.value; });
+    dayIdx = DAY_NAMES.indexOf(parts.weekday);
+    let hr = parseInt(parts.hour, 10);
+    if (hr === 24) hr = 0;
+    nowMin = hr * 60 + parseInt(parts.minute, 10);
+  } catch (e) {
+    return { state: 'unknown', label: '', detail: '' };
+  }
+  if (dayIdx < 0 || !store.hours || !store.hours[dayIdx]) {
+    return { state: 'unknown', label: '', detail: '' };
+  }
+
+  const todayRange = store.hours[dayIdx][1];
+  const seg = todayRange.split(/[–-]/);
+  let openMin = parseClock(seg[0]);
+  let closeMin = parseClock(seg[1]);
+  if (openMin == null || closeMin == null) {
+    return { state: 'unknown', label: '', detail: '' };
+  }
+  if (closeMin === 0) closeMin = 1440;            // "12:00 AM" close = midnight
+  if (closeMin <= openMin) closeMin += 1440;       // crosses midnight
+
+  const tidy = (t) => t.trim().replace(':00', '').replace(/\s/g, ' ');
+
+  if (nowMin >= openMin && nowMin < closeMin) {
+    return { state: 'open', label: 'Open now', detail: 'Closes ' + tidy(seg[1]) };
+  }
+  // Closed — find the next opening
+  if (nowMin < openMin) {
+    return { state: 'closed', label: 'Closed', detail: 'Opens ' + tidy(seg[0]) + ' today' };
+  }
+  // After close — next day that has hours
+  for (let i = 1; i <= 7; i++) {
+    const d = (dayIdx + i) % 7;
+    if (store.hours[d]) {
+      const nextOpen = tidy(store.hours[d][1].split(/[–-]/)[0]);
+      const when = i === 1 ? 'tomorrow' : store.hours[d][0];
+      return { state: 'closed', label: 'Closed', detail: 'Opens ' + nextOpen + ' ' + when };
+    }
+  }
+  return { state: 'closed', label: 'Closed', detail: '' };
 };
 
 window.haversineKm = function (lat1, lng1, lat2, lng2) {

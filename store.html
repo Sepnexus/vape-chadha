@@ -259,6 +259,28 @@
   }
   .store-meta strong { color: var(--gold); font-weight: 500; }
 
+  /* Live open/closed status pill */
+  .status-pill {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--mono); font-size: 10px; font-weight: 500;
+    letter-spacing: 0.14em; text-transform: uppercase; white-space: nowrap;
+  }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+  .status-pill.is-open { color: #4ade80; }
+  .status-pill.is-open .status-dot { background: #4ade80; box-shadow: 0 0 8px #4ade80; animation: blink 2s ease-in-out infinite; }
+  .status-pill.is-closed { color: var(--ink-mute); }
+  .status-pill.is-closed .status-dot { background: var(--ink-mute); }
+  .status-pill.is-soon { color: var(--gold); }
+  .status-pill.is-soon .status-dot { background: var(--gold); box-shadow: 0 0 8px rgba(232,181,48,0.55); }
+  @keyframes blink { 0%,100% { opacity: 1; } 50% { opacity: 0.3; } }
+  .store-meta .status-pill { font-size: 11px; letter-spacing: 0.16em; }
+  .status-detail { color: var(--ink-mute); }
+  .other-card .status-pill {
+    align-self: flex-start; padding: 4px 9px;
+    border: 1px solid currentColor; border-radius: 2px;
+  }
+  .other-card .status-pill.is-closed { border-color: var(--line); }
+
   .badge-soon {
     display: inline-flex; padding: 4px 10px;
     font-family: var(--mono); font-size: 10px; letter-spacing: 0.18em;
@@ -558,7 +580,7 @@
   </div>
 </footer>
 
-<script src="assets/stores.js?v=20260516c"></script>
+<script src="assets/stores.js?v=20260516d"></script>
 <script>
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
   const params = new URLSearchParams(location.search);
@@ -632,10 +654,16 @@
     <div class="hours-row ${i === today ? 'is-today' : ''}"><span class="day">${escapeHtml(row[0])}</span><span>${escapeHtml(row[1])}</span></div>
   `).join('');
 
+  // Live open/closed status pill
+  function statusPillHTML(s) {
+    const st = window.getStoreStatus(s);
+    return `<span class="status-pill is-${st.state}"><span class="status-dot"></span>${st.label}</span>`;
+  }
+
   const others = window.STORES.filter(s => s.id !== store.id);
   const othersHtml = others.map(s => `
     <a href="store.html?city=${s.id}" class="other-card ${s.status === 'coming-soon' ? 'is-soon' : ''}">
-      <span class="other-tag ${s.status === 'coming-soon' ? 'tag-soon' : ''}">${s.status === 'coming-soon' ? 'Coming Soon' : 'Open'}</span>
+      ${statusPillHTML(s)}
       <div>
         <div class="other-brand">${escapeHtml(s.brand)}</div>
         <div class="other-city">${escapeHtml(s.city)}</div>
@@ -645,6 +673,7 @@
   `).join('');
 
   const isSoon = store.status === 'coming-soon';
+  const liveStatus = window.getStoreStatus(store);
 
   document.getElementById('storeMain').innerHTML = `
     <section class="store-hero">
@@ -657,7 +686,7 @@
         <p class="store-sub">${escapeHtml(store.tagline)} ${isSoon ? "We're putting the finishing touches on the space — opening soon." : "Drop in for devices, pods, e-liquids and honest advice."}</p>
         <div class="store-meta">
           <span>● ${escapeHtml(store.addressLine)}</span>
-          <span>${isSoon ? 'Opening soon' : 'Open ' + escapeHtml(store.hours[today][1])}</span>
+          <span class="status-pill is-${liveStatus.state}"><span class="status-dot"></span>${liveStatus.label}${liveStatus.detail ? ' · ' + escapeHtml(liveStatus.detail) : ''}</span>
           <span><strong>${escapeHtml(store.phone)}</strong></span>
         </div>
       </div>
