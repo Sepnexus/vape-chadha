@@ -2280,9 +2280,9 @@
   </div>
 
   <div class="hero-side">
-    <span>Vape Shack</span>
+    <span id="heroSideBrand">Vape Shack</span>
     <span>Est. 2022</span>
-    <span>Victoria, BC</span>
+    <span id="heroSideCity">Victoria, BC</span>
   </div>
 
   <div class="vape-stage" id="vapeStage">
@@ -2310,13 +2310,13 @@
 
   <div class="hero-content">
     <div class="hero-headline-wrap">
-      <span class="eyebrow reveal">Vape Shack · Victoria, BC</span>
+      <span class="eyebrow reveal" id="heroEyebrow">Vape Shack · Victoria, BC</span>
       <h1 class="word-reveal" id="heroHeadline">
         <span class="w"><span>Premium</span></span>
         <span class="w"><span>devices.</span></span><br>
         <span class="w"><span class="ital">Curated</span></span>
         <span class="w"><span>flavors.</span></span>
-        <span class="display-line">— 207 Menzies Street · Open daily</span>
+        <span class="display-line" id="heroDisplayLine">— 207 Menzies Street · Victoria</span>
       </h1>
     </div>
   </div>
@@ -2332,8 +2332,8 @@
       </div>
     </div>
     <div class="hero-stats reveal-stagger">
-      <div class="stat"><div class="num" data-count="1">0</div><div class="label">Victoria Location</div></div>
-      <div class="stat"><div class="num" data-count="15" data-suffix="h">0</div><div class="label">Open Daily</div></div>
+      <div class="stat"><div class="num" data-count="5">0</div><div class="label">BC Locations</div></div>
+      <div class="stat"><div class="num" data-count="7" data-suffix="d">0</div><div class="label">Open Weekly</div></div>
       <div class="stat"><div class="num" data-count="4.9" data-decimal="1">0</div><div class="label">Avg. Rating</div></div>
     </div>
   </div>
@@ -2450,15 +2450,15 @@
         </div>
       </div>
       <div class="about-text">
-        <span class="eyebrow reveal">Est. 2022 · Victoria, BC</span>
+        <span class="eyebrow reveal">Est. 2022 · British Columbia</span>
         <div class="h-display reveal">A shack with <em>standards</em>.</div>
-        <p class="reveal">Vape Shack opened on Menzies Street with a simple idea — give Victoria a vape shop where the staff actually use the products, the wall is curated instead of crowded, and questions get real answers.</p>
-        <p class="reveal">We're a small, independent store. Every device, pod, and bottle on the shelf earns its spot. Drop in, tell us what you're looking for, and we'll point you to something honest.</p>
-        <a href="#locations" class="btn btn-ghost reveal">Visit the store
+        <p class="reveal">Vape Shack started on Menzies Street in Victoria with a simple idea — a vape shop where the staff actually use the products, the wall is curated instead of crowded, and questions get real answers.</p>
+        <p class="reveal">That idea grew into a small network of independent shops across BC — Victoria, Osoyoos, Princeton, Peachland, with Sidney on the way. Every device, pod, and bottle on the shelf still earns its spot.</p>
+        <a href="#locations" class="btn btn-ghost reveal">See all locations
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 7h10M8 3l4 4-4 4"/></svg>
         </a>
         <div class="about-stats reveal-stagger">
-          <div class="stat"><div class="num" data-count="1">0</div><div class="label">Local store</div></div>
+          <div class="stat"><div class="num" data-count="5">0</div><div class="label">BC locations</div></div>
           <div class="stat"><div class="num" data-count="200" data-suffix="+">0</div><div class="label">Curated SKUs</div></div>
           <div class="stat"><div class="num" data-count="7" data-suffix="d">0</div><div class="label">Open weekly</div></div>
         </div>
@@ -2840,29 +2840,45 @@
 
   // ============ Counter animation ============
   function animateCount(el) {
+    if (el._counted) return;
+    el._counted = true;
     const target = parseFloat(el.dataset.count);
     const decimal = parseInt(el.dataset.decimal || '0');
     const suffix = el.dataset.suffix || '';
+    const finalText = (isNaN(target) ? 0 : target).toFixed(decimal) + suffix;
     const duration = 1800;
     const start = performance.now();
     function tick(now) {
       const t = Math.min(1, (now - start) / duration);
       const eased = 1 - Math.pow(1 - t, 3);
-      const v = (target * eased).toFixed(decimal);
-      el.textContent = v + suffix;
+      el.textContent = (target * eased).toFixed(decimal) + suffix;
       if (t < 1) requestAnimationFrame(tick);
     }
     requestAnimationFrame(tick);
+    // Guarantee the final value even if rAF is throttled (background tab)
+    setTimeout(() => { el.textContent = finalText; }, duration + 250);
   }
-  const countObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        animateCount(e.target);
-        countObserver.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.5 });
-  document.querySelectorAll('[data-count]').forEach(el => countObserver.observe(el));
+  // Trigger each counter when it scrolls into view — scroll/rAF based
+  // (more reliable than IntersectionObserver across environments),
+  // with a hard safety timer so a counter never stays stuck at 0.
+  (function () {
+    let pending = Array.from(document.querySelectorAll('[data-count]'));
+    let ticking = false;
+    function check() {
+      ticking = false;
+      const vh = window.innerHeight;
+      pending = pending.filter(el => {
+        const r = el.getBoundingClientRect();
+        if (r.top < vh && r.bottom > 0) { animateCount(el); return false; }
+        return true;
+      });
+    }
+    function request() { if (!ticking) { ticking = true; requestAnimationFrame(check); } }
+    check();
+    window.addEventListener('scroll', request, { passive: true });
+    window.addEventListener('resize', request, { passive: true });
+    setTimeout(() => { pending.forEach(animateCount); pending = []; }, 3000);
+  })();
 
   // ============ Trigger hero word reveal on load ============
   setTimeout(() => {
@@ -2996,6 +3012,13 @@
           ? `${store.city} · Coming Soon`
           : `${store.city} · ${st.label}${st.detail ? ' · ' + st.detail : ''}`;
       }
+
+      // Hero — eyebrow, vertical side rail, headline address line all
+      // reflect the one featured store (no mixed Victoria/Peachland).
+      set('heroEyebrow', `${store.brand} · ${store.city}, ${store.region}`);
+      set('heroSideBrand', store.brand);
+      set('heroSideCity', `${store.city}, ${store.region}`);
+      set('heroDisplayLine', `— ${store.addressLine} · ${store.city}`);
 
       // Nearest badge
       if (isNearestDetected) {
