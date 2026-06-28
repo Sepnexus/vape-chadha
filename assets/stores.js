@@ -158,6 +158,22 @@ window.STORES = [
     status: 'open',
     tagline: 'Now open on Beacon Ave — beachy mural-clad smoke & vape shop.',
     photo: 'assets/photos/sidney.jpg',
+    gallery: [
+      'assets/photos/sidney/01.jpg',
+      'assets/photos/sidney/02.jpg',
+      'assets/photos/sidney/03.jpg',
+      'assets/photos/sidney/04.jpg',
+      'assets/photos/sidney/05.jpg',
+      'assets/photos/sidney/06.jpg',
+      'assets/photos/sidney/07.jpg',
+      'assets/photos/sidney/08.jpg',
+      'assets/photos/sidney/09.jpg',
+      'assets/photos/sidney/10.jpg',
+      'assets/photos/sidney/11.jpg',
+      'assets/photos/sidney/12.jpg',
+      'assets/photos/sidney/13.jpg',
+      'assets/photos/sidney/14.jpg',
+    ],
   },
 ];
 
