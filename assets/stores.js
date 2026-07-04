@@ -126,7 +126,17 @@ window.STORES = [
     ],
     status: 'open',
     tagline: 'Lakeside, easy parking, friendly staff.',
-    photo: null,
+    photo: 'assets/photos/peachland/01.jpg',
+    gallery: [
+      'assets/photos/peachland/01.jpg',
+      'assets/photos/peachland/02.jpg',
+      'assets/photos/peachland/03.jpg',
+      'assets/photos/peachland/04.jpg',
+      'assets/photos/peachland/05.jpg',
+      'assets/photos/peachland/06.jpg',
+      'assets/photos/peachland/07.jpg',
+      'assets/photos/peachland/08.jpg',
+    ],
   },
   {
     id: 'sidney',
