@@ -694,7 +694,7 @@
   </div>
 </footer>
 
-<script src="assets/stores.js?v=20260704b"></script>
+<script src="assets/stores.js?v=20260704c"></script>
 <script>
   const escapeHtml = (s) => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c]);
   // City comes from a clean path (/victoria) in production, or from
@@ -881,7 +881,9 @@
           <div class="carousel-track" id="carouselTrack">
             ${store.gallery.map((src, i) => `
               <div class="carousel-slide" data-gallery-index="${i}" role="group" aria-label="Photo ${i + 1} of ${store.gallery.length}">
-                <img src="${src}" alt="${escapeHtml(store.name)} — photo ${i + 1}" ${i > 1 ? 'loading="lazy"' : ''}>
+                ${i < 2
+                  ? `<img src="${src}" alt="${escapeHtml(store.name)} — photo ${i + 1}">`
+                  : `<img data-src="${src}" alt="${escapeHtml(store.name)} — photo ${i + 1}">`}
               </div>
             `).join('')}
           </div>
@@ -1004,11 +1006,29 @@
     }
 
     // ---- Carousel ----
+    // Images beyond the first 2 slides carry data-src instead of src.
+    // Native loading="lazy" won't reliably fetch them here: the browser's
+    // lazy-load heuristic is driven by scroll/intersection events, but
+    // this carousel repositions slides purely via CSS transform — no
+    // scroll ever fires — so a slide reached only by clicking a dot/arrow
+    // could sit unloaded forever. We load it (and its neighbours, for a
+    // smoother swipe) ourselves on every navigation instead.
+    const slideImgs = Array.from(track.querySelectorAll('.carousel-slide img'));
+    function ensureLoaded(i) {
+      const img = slideImgs[((i % n) + n) % n];
+      if (img && img.dataset.src) {
+        img.src = img.dataset.src;
+        delete img.dataset.src;
+      }
+    }
     function goTo(i) {
       current = ((i % n) + n) % n;
       track.style.transform = `translateX(-${current * 100}%)`;
       caroIdx.textContent = current + 1;
       dots.forEach((d, di) => d.classList.toggle('active', di === current));
+      ensureLoaded(current);
+      ensureLoaded(current + 1);
+      ensureLoaded(current - 1);
     }
 
     // Auto-play: advance every 4.5s; pause during interaction / lightbox,
@@ -1038,6 +1058,9 @@
       if (document.hidden) pause();
       else if (!document.body.classList.contains('lb-open')) play();
     });
+    ensureLoaded(1);  // slide 2 (already eager, harmless) + primes slide 3 below
+    ensureLoaded(2);  // so the first auto-advance never shows an unloaded frame
+    ensureLoaded(-1); // last slide, in case someone swipes backward from the start
     play();
 
     // ---- Lightbox (click a slide to zoom) ----
